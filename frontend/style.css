@@ -1,0 +1,755 @@
+/* =========================================
+   RESET
+========================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/* =========================================
+   BODY
+========================================= */
+
+body {
+
+    min-height: 100vh;
+
+    font-family:
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    color: white;
+
+    background-image:
+        url("../assets/college.jpeg");
+
+    background-size: cover;
+
+    background-position: center;
+
+    background-attachment: fixed;
+
+    overflow-x: hidden;
+}
+
+
+/* =========================================
+   BACKGROUND OVERLAY
+========================================= */
+
+.background-overlay {
+
+    position: fixed;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(5, 15, 35, 0.88),
+            rgba(12, 35, 70, 0.72),
+            rgba(5, 15, 35, 0.88)
+        );
+
+    z-index: -1;
+}
+
+
+/* =========================================
+   MAIN CONTAINER
+========================================= */
+
+.main-container {
+
+    width: 100%;
+
+    min-height: 100vh;
+
+    padding:
+        35px
+        7%
+        25px;
+
+    display: flex;
+
+    flex-direction: column;
+}
+
+
+/* =========================================
+   COLLEGE HEADER
+========================================= */
+
+.college-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 22px;
+
+    animation: fadeDown 1s ease;
+}
+
+
+.logo-container {
+
+    width: 90px;
+
+    height: 90px;
+
+    border-radius: 50%;
+
+    padding: 8px;
+
+    background:
+        rgba(255,255,255,0.15);
+
+    backdrop-filter: blur(15px);
+
+    border:
+        1px solid
+        rgba(255,255,255,0.3);
+
+    box-shadow:
+        0 10px 30px
+        rgba(0,0,0,0.3);
+}
+
+
+.college-logo {
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: contain;
+
+    border-radius: 50%;
+}
+
+
+.college-info h1 {
+
+    font-size: 2rem;
+
+    letter-spacing: 2px;
+
+    font-weight: 700;
+}
+
+
+.college-info p {
+
+    margin-top: 7px;
+
+    font-size: 0.95rem;
+
+    color:
+        rgba(255,255,255,0.75);
+
+    letter-spacing: 0.5px;
+}
+
+
+/* =========================================
+   WELCOME SECTION
+========================================= */
+
+.welcome-section {
+
+    max-width: 850px;
+
+    margin:
+        70px auto 50px;
+
+    text-align: center;
+
+    animation:
+        fadeUp 1s ease 0.2s both;
+}
+
+
+.welcome-small {
+
+    display: inline-block;
+
+    padding:
+        7px
+        18px;
+
+    border-radius: 30px;
+
+    background:
+        rgba(255,255,255,0.12);
+
+    border:
+        1px solid
+        rgba(255,255,255,0.2);
+
+    font-size: 0.75rem;
+
+    letter-spacing: 3px;
+
+    color:
+        rgba(255,255,255,0.8);
+}
+
+
+.welcome-section h2 {
+
+    margin-top: 18px;
+
+    font-size:
+        clamp(2rem, 5vw, 3.6rem);
+
+    line-height: 1.15;
+
+    font-weight: 750;
+}
+
+
+.welcome-section p {
+
+    max-width: 700px;
+
+    margin:
+        20px auto 0;
+
+    line-height: 1.7;
+
+    font-size: 1rem;
+
+    color:
+        rgba(255,255,255,0.75);
+}
+
+
+/* =========================================
+   PORTAL SECTION
+========================================= */
+
+.portal-section {
+
+    width: 100%;
+
+    animation:
+        fadeUp 1s ease 0.4s both;
+}
+
+
+.portal-section h3 {
+
+    text-align: center;
+
+    font-size: 0.9rem;
+
+    letter-spacing: 3px;
+
+    margin-bottom: 25px;
+
+    color:
+        rgba(255,255,255,0.75);
+}
+
+
+/* =========================================
+   PORTAL CONTAINER
+========================================= */
+
+.portal-container {
+
+    max-width: 1150px;
+
+    margin: auto;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 25px;
+}
+
+
+/* =========================================
+   PORTAL CARD
+========================================= */
+
+.portal-card {
+
+    position: relative;
+
+    padding: 35px 28px;
+
+    text-align: center;
+
+    border-radius: 24px;
+
+    background:
+        rgba(255,255,255,0.11);
+
+    backdrop-filter:
+        blur(18px);
+
+    -webkit-backdrop-filter:
+        blur(18px);
+
+    border:
+        1px solid
+        rgba(255,255,255,0.22);
+
+    box-shadow:
+        0 15px 40px
+        rgba(0,0,0,0.25);
+
+    cursor: pointer;
+
+    transition:
+        transform 0.35s ease,
+        background 0.35s ease,
+        box-shadow 0.35s ease;
+
+    overflow: hidden;
+}
+
+
+/* Shine effect */
+
+.portal-card::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: -100%;
+
+    left: -100%;
+
+    width: 200%;
+
+    height: 200%;
+
+    background:
+        linear-gradient(
+            120deg,
+            transparent 40%,
+            rgba(255,255,255,0.12),
+            transparent 60%
+        );
+
+    transform: rotate(20deg);
+
+    transition:
+        top 0.7s ease,
+        left 0.7s ease;
+}
+
+
+.portal-card:hover::before {
+
+    top: 100%;
+
+    left: 100%;
+}
+
+
+.portal-card:hover {
+
+    transform:
+        translateY(-12px)
+        scale(1.02);
+
+    background:
+        rgba(255,255,255,0.17);
+
+    box-shadow:
+        0 25px 60px
+        rgba(0,0,0,0.4);
+}
+
+
+/* =========================================
+   PORTAL ICON
+========================================= */
+
+.portal-icon {
+
+    width: 75px;
+
+    height: 75px;
+
+    margin:
+        0 auto 20px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 20px;
+
+    background:
+        rgba(255,255,255,0.13);
+
+    border:
+        1px solid
+        rgba(255,255,255,0.2);
+
+    font-size: 2.4rem;
+
+    transition:
+        transform 0.3s ease;
+}
+
+
+.portal-card:hover
+.portal-icon {
+
+    transform:
+        scale(1.1)
+        rotate(3deg);
+}
+
+
+/* =========================================
+   PORTAL TEXT
+========================================= */
+
+.portal-card h4 {
+
+    font-size: 1.25rem;
+
+    letter-spacing: 1px;
+
+    margin-bottom: 12px;
+}
+
+
+.portal-card p {
+
+    min-height: 72px;
+
+    font-size: 0.9rem;
+
+    line-height: 1.6;
+
+    color:
+        rgba(255,255,255,0.7);
+}
+
+
+/* =========================================
+   BUTTON
+========================================= */
+
+.portal-card button {
+
+    margin-top: 20px;
+
+    padding:
+        11px 20px;
+
+    border: none;
+
+    border-radius: 30px;
+
+    background:
+        rgba(255,255,255,0.92);
+
+    color:
+        #14213d;
+
+    font-size: 0.9rem;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.3s ease,
+        background 0.3s ease;
+}
+
+
+.portal-card button span {
+
+    margin-left: 8px;
+
+    transition:
+        margin-left 0.3s ease;
+}
+
+
+.portal-card:hover button {
+
+    transform:
+        translateY(-2px);
+
+    background:
+        white;
+}
+
+
+.portal-card:hover button span {
+
+    margin-left: 14px;
+}
+
+
+/* =========================================
+   FOOTER
+========================================= */
+
+footer {
+
+    margin-top: 60px;
+
+    padding-top: 20px;
+
+    text-align: center;
+
+    border-top:
+        1px solid
+        rgba(255,255,255,0.12);
+
+    color:
+        rgba(255,255,255,0.5);
+
+    font-size: 0.75rem;
+
+    line-height: 1.8;
+}
+
+
+/* =========================================
+   ANIMATIONS
+========================================= */
+
+@keyframes fadeDown {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(-30px);
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+}
+
+
+@keyframes fadeUp {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(30px);
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 900px) {
+
+    .portal-container {
+
+        grid-template-columns:
+            1fr;
+
+        max-width: 550px;
+    }
+
+    .portal-card p {
+
+        min-height: auto;
+    }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+    .main-container {
+
+        padding:
+            25px 18px;
+    }
+
+
+    .college-header {
+
+        flex-direction: column;
+
+        text-align: center;
+    }
+
+
+    .college-info h1 {
+
+        font-size: 1.4rem;
+    }
+
+
+    .college-info p {
+
+        font-size: 0.8rem;
+    }
+
+
+    .logo-container {
+
+        width: 75px;
+
+        height: 75px;
+    }
+
+
+    .welcome-section {
+
+        margin-top: 50px;
+    }
+
+
+    .welcome-section h2 {
+
+        font-size: 2rem;
+    }
+
+
+    .welcome-section p {
+
+        font-size: 0.9rem;
+    }
+
+
+    .portal-card {
+
+        padding: 30px 22px;
+    }
+
+}
+
+/* =====================================================
+   SINGLE COLLEGE PORTAL CARD - DESKTOP CENTERING
+   ===================================================== */
+
+.portal-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.portal-container .portal-card {
+    width: 360px;
+    max-width: 100%;
+}
+/* ===============================
+   STUDENT REGISTRATION LINK
+   =============================== */
+
+.registration-link {
+    margin-top: 18px;
+    text-align: center;
+}
+
+.registration-link p {
+    margin: 0 0 6px;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.65);
+}
+
+.registration-link a {
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.3s ease;
+}
+
+.registration-link a:hover {
+    text-decoration: underline;
+    opacity: 0.85;
+}
+
+/* =========================================
+   LIVE COLLEGE STATISTICS
+   ========================================= */
+
+.portal-stats {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    margin: 18px 0 24px;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.9);
+    flex-wrap: wrap;
+}
+
+.portal-stats span {
+    white-space: nowrap;
+}
+
+.portal-stats strong {
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.stats-divider {
+    opacity: 0.5;
+}
+
+
+/* Mobile */
+
+@media (max-width: 600px) {
+
+    .portal-stats {
+        gap: 8px;
+        margin: 15px 10px 20px;
+        font-size: 12px;
+    }
+
+    .portal-stats strong {
+        font-size: 14px;
+    }
+
+    .stats-divider {
+        display: none;
+    }
+
+}

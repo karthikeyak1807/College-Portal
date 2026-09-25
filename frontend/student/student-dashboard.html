@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Student Dashboard</title>
+
+    <link
+        rel="stylesheet"
+        href="student-dashboard.css"
+    >
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================
+         MOBILE TOP BAR
+    ========================== -->
+
+    <header class="mobile-header">
+
+        <button
+            id="menuButton"
+            class="menu-button"
+        >
+            ☰
+        </button>
+
+        <div class="mobile-title">
+            Campus Academic Portal
+        </div>
+
+    </header>
+
+
+
+    <!-- =========================
+         SIDEBAR
+    ========================== -->
+
+    <aside
+        id="sidebar"
+        class="sidebar"
+    >
+
+        <div class="sidebar-top">
+
+
+            <!-- Logo -->
+
+            <div class="sidebar-logo">
+
+                <img
+                    src="../../assets/college-logo.jpeg"
+                    alt="College Logo"
+                >
+
+            </div>
+
+
+            <div class="portal-name">
+
+                <h2>Campus Portal</h2>
+
+                <p>Student Workspace</p>
+
+            </div>
+
+
+            <!-- Navigation -->
+
+            <nav class="navigation">
+
+
+                <button
+                    class="nav-item active"
+                    data-section="dashboard"
+                >
+
+                    <span>🏠</span>
+
+                    Dashboard
+
+                </button>
+
+
+                <button
+                    class="nav-item"
+                    data-section="materials"
+                >
+
+                    <span>📚</span>
+
+                    Study Materials
+
+                </button>
+
+
+
+
+                <button
+                    class="nav-item"
+                    data-section="profile"
+                >
+
+                    <span>👤</span>
+
+                    My Profile
+
+                </button>
+
+
+            </nav>
+
+        </div>
+
+
+        <!-- Logout -->
+
+        <button
+            id="logoutButton"
+            class="logout-button"
+        >
+
+            <span>🚪</span>
+
+            Logout
+
+        </button>
+
+    </aside>
+
+
+
+    <!-- =========================
+         MAIN CONTENT
+    ========================== -->
+
+    <main class="main-content">
+
+
+        <!-- TOP BAR -->
+
+        <div class="topbar">
+
+            <div>
+
+                <p class="topbar-small">
+                    STUDENT PORTAL
+                </p>
+
+                <h1 id="pageTitle">
+                    Dashboard
+                </h1>
+
+            </div>
+
+
+            <div class="student-mini-profile">
+
+                <div class="mini-avatar">
+                    K
+                </div>
+
+                <div>
+
+                    <strong id="studentMiniName">
+    Loading...
+</strong>
+
+<span id="studentMiniInfo">
+    Loading...
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================
+             DASHBOARD SECTION
+        ================================== -->
+
+        <section
+            id="dashboard"
+            class="content-section active-section"
+        >
+
+
+            <div class="welcome-card">
+
+                <div>
+
+                    <span>
+                        GOOD EVENING 👋
+                    </span>
+
+                    <h2>
+                        Welcome back, <span id="studentWelcomeName">Loading...</span>!
+                    </h2>
+
+                    <p>
+            
+    Access your academic materials,
+    explore resources shared by your teachers
+    and stay connected with your college.
+                    </p>
+
+                </div>
+
+
+                <div class="welcome-icon">
+                    🎓
+                </div>
+
+            </div>
+
+
+
+            <!-- STAT CARDS -->
+
+            <div class="stats-grid">
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        📚
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Materials
+                        </span>
+
+                       <strong id="materialCount">
+                        0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        👨‍🏫
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Teachers
+                        </span>
+
+                       <strong id="teacherCount">
+                        0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- RECENT MATERIALS -->
+
+            <div class="section-heading">
+
+                <div>
+
+                    <h2>
+                        Recent Materials
+                    </h2>
+
+                    <p>
+                        Recently uploaded academic resources
+                    </p>
+
+                </div>
+
+
+                <button
+                    class="view-all-button"
+                    data-section="materials"
+                >
+                    View All →
+                </button>
+
+            </div>
+
+<div class="material-list" id="recentMaterialsList">
+
+    <div class="material-row">
+
+        <div class="material-info">
+            <strong>Loading materials...</strong>
+            <span>Please wait...</span>
+        </div>
+
+    </div>
+
+</div>
+        
+        </section>
+
+
+
+        <!-- =================================
+             MATERIALS SECTION
+        ================================== -->
+
+        <section
+            id="materials"
+            class="content-section"
+        >
+
+            <div class="section-heading">
+
+                <div>
+
+                    <h2>
+                        Study Materials
+                    </h2>
+
+                    <p>
+                        Materials uploaded by your teachers
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- SEARCH -->
+
+            <div class="search-box">
+
+                <span>🔍</span>
+
+                <input
+                    type="text"
+                    id="materialSearch"
+                    placeholder="Search materials, teachers or subjects..."
+                >
+
+            </div>
+
+
+
+            <!-- TEACHER CARD -->
+
+            <div class="teacher-material-card">
+
+                <div class="teacher-header">
+
+                    <div class="teacher-avatar">
+                        RK
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Dr. Rajesh Kumar
+                        </h3>
+
+                        <p>
+                            Mathematics • Professor
+                        </p>
+
+                    </div>
+
+                    <span class="material-count">
+                        8 Materials
+                    </span>
+
+                </div>
+
+
+                <div class="files-grid">
+
+
+                    <div class="file-card">
+
+                        <div class="large-file-icon pdf">
+                            PDF
+                        </div>
+
+                        <h4>
+                            Unit 1 Notes
+                        </h4>
+
+                        <p>
+                            Mathematics
+                        </p>
+
+                        <button>
+                            View / Download
+                        </button>
+
+                    </div>
+
+
+                    <div class="file-card">
+
+                        <div class="large-file-icon pdf">
+                            PDF
+                        </div>
+
+                        <h4>
+                            Unit 2 Notes
+                        </h4>
+
+                        <p>
+                            Mathematics
+                        </p>
+
+                        <button>
+                            View / Download
+                        </button>
+
+                    </div>
+
+
+                    <div class="file-card">
+
+                        <div class="large-file-icon xls">
+                            XLS
+                        </div>
+
+                        <h4>
+                            Internal Questions
+                        </h4>
+
+                        <p>
+                            Mathematics
+                        </p>
+
+                        <button>
+                            View / Download
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- SECOND TEACHER -->
+
+            <div class="teacher-material-card">
+
+                <div class="teacher-header">
+
+                    <div class="teacher-avatar">
+                        PA
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Prof. Arun
+                        </h3>
+
+                        <p>
+                            Data Structures • Assistant Professor
+                        </p>
+
+                    </div>
+
+                    <span class="material-count">
+                        12 Materials
+                    </span>
+
+                </div>
+
+
+                <div class="files-grid">
+
+
+                    <div class="file-card">
+
+                        <div class="large-file-icon pdf">
+                            PDF
+                        </div>
+
+                        <h4>
+                            Trees
+                        </h4>
+
+                        <p>
+                            Data Structures
+                        </p>
+
+                        <button>
+                            View / Download
+                        </button>
+
+                    </div>
+
+
+                    <div class="file-card">
+
+                        <div class="large-file-icon doc">
+                            DOC
+                        </div>
+
+                        <h4>
+                            Graph Algorithms
+                        </h4>
+
+                        <p>
+                            Data Structures
+                        </p>
+
+                        <button>
+                            View / Download
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================
+             PROFILE SECTION
+        ================================== -->
+
+        <section
+            id="profile"
+            class="content-section"
+        >
+
+            <div class="section-heading">
+
+                <div>
+
+                    <h2>
+                        My Profile
+                    </h2>
+
+                    <p>
+                        Your academic information
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="profile-card">
+
+
+                <div class="profile-top">
+
+                    <div class="profile-avatar">
+                        K
+                    </div>
+
+                    <div>
+
+                            <h2 id="profileName">
+                            Loading...
+                        </h2>
+
+                        <p id="profileCourse">
+                        Loading...
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="profile-details">
+
+
+                    <div>
+
+                        <span>
+                            Registration ID
+                        </span>
+
+                       <strong id="studentRegistrationId">
+                        Loading...
+
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Branch
+                        </span>
+
+                        <strong id="studentBranch">
+                        Loading...
+                           
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Semester
+                        </span>
+
+                      <strong id="studentSemester">
+    Loading...
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Academic Year
+                        </span>
+
+                        <strong>
+                            2026 - 2027
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Email
+                        </span>
+
+                        <strong>
+                           <strong id="studentEmail">
+    Loading...
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Status
+                        </span>
+
+                        <strong class="status-active">
+                            Active
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+
+    <script src="student-dashboard.js"></script>
+
+</body>
+
+</html>

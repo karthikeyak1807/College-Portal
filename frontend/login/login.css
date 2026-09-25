@@ -1,0 +1,454 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+body {
+    min-height: 100vh;
+
+    font-family: "Segoe UI", Arial, sans-serif;
+
+    color: white;
+
+    background-image: url("../../assets/college.jpeg");
+
+    background-size: cover;
+
+    background-position: center;
+
+    background-attachment: fixed;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    position: relative;
+}
+
+
+.background-overlay {
+    position: fixed;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(5, 12, 30, 0.92),
+            rgba(20, 35, 65, 0.82)
+        );
+
+    z-index: 0;
+}
+
+
+.back-button {
+    position: fixed;
+
+    top: 25px;
+    left: 25px;
+
+    color: white;
+
+    text-decoration: none;
+
+    font-size: 14px;
+
+    padding: 10px 16px;
+
+    border-radius: 10px;
+
+    background: rgba(255, 255, 255, 0.08);
+
+    border: 1px solid rgba(255, 255, 255, 0.15);
+
+    backdrop-filter: blur(10px);
+
+    transition: 0.3s;
+
+    z-index: 5;
+}
+
+
+.back-button:hover {
+    background: rgba(255, 255, 255, 0.16);
+
+    transform: translateY(-2px);
+}
+
+
+.login-container {
+    width: 100%;
+
+    min-height: 100vh;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    padding: 30px;
+
+    position: relative;
+
+    z-index: 2;
+}
+
+
+.login-card {
+    width: 100%;
+
+    max-width: 450px;
+
+    padding: 42px 40px;
+
+    background: rgba(10, 18, 35, 0.72);
+
+    border: 1px solid rgba(255, 255, 255, 0.14);
+
+    border-radius: 24px;
+
+    backdrop-filter: blur(18px);
+
+    -webkit-backdrop-filter: blur(18px);
+
+    box-shadow:
+        0 25px 60px rgba(0, 0, 0, 0.45);
+
+    animation: cardAppear 0.6s ease;
+}
+
+
+@keyframes cardAppear {
+
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+}
+
+
+.logo-container {
+    display: flex;
+
+    justify-content: center;
+
+    margin-bottom: 22px;
+}
+
+
+.college-logo {
+    width: 85px;
+
+    height: 85px;
+
+    object-fit: cover;
+
+    border-radius: 50%;
+
+    border: 3px solid rgba(255, 255, 255, 0.8);
+
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+
+.heading-section {
+    text-align: center;
+
+    margin-bottom: 30px;
+}
+
+
+.small-heading {
+    font-size: 12px;
+
+    letter-spacing: 3px;
+
+    color: rgba(255, 255, 255, 0.65);
+
+    margin-bottom: 8px;
+}
+
+
+.heading-section h1 {
+    font-size: 30px;
+
+    letter-spacing: 1px;
+
+    margin-bottom: 10px;
+}
+
+
+.subtitle {
+    font-size: 14px;
+
+    color: rgba(255, 255, 255, 0.65);
+
+    line-height: 1.5;
+}
+
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+
+.input-group label {
+    display: block;
+
+    margin-bottom: 8px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    color: rgba(255, 255, 255, 0.9);
+}
+
+
+.input-group input {
+    width: 100%;
+
+    padding: 14px 15px;
+
+    border-radius: 12px;
+
+    border: 1px solid rgba(255, 255, 255, 0.14);
+
+    background: rgba(255, 255, 255, 0.07);
+
+    color: white;
+
+    outline: none;
+
+    font-size: 14px;
+
+    transition: 0.3s;
+}
+
+
+.input-group input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+
+.input-group input:focus {
+    border-color: rgba(255, 255, 255, 0.45);
+
+    background: rgba(255, 255, 255, 0.1);
+
+    box-shadow:
+        0 0 0 3px rgba(255, 255, 255, 0.05);
+}
+
+
+.password-wrapper {
+    position: relative;
+}
+
+
+.password-wrapper input {
+    padding-right: 50px;
+}
+
+
+.toggle-password {
+    position: absolute;
+
+    right: 10px;
+
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    border: none;
+
+    background: transparent;
+
+    color: rgba(255, 255, 255, 0.7);
+
+    cursor: pointer;
+
+    font-size: 17px;
+
+    padding: 5px;
+}
+
+
+.login-options {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin: 5px 0 25px;
+
+    font-size: 13px;
+}
+
+
+.remember-me {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    color: rgba(255, 255, 255, 0.7);
+
+    cursor: pointer;
+}
+
+
+.remember-me input {
+    cursor: pointer;
+}
+
+
+.login-options a {
+    color: rgba(255, 255, 255, 0.75);
+
+    text-decoration: none;
+
+    transition: 0.3s;
+}
+
+
+.login-options a:hover {
+    color: white;
+}
+
+
+.login-button {
+    width: 100%;
+
+    padding: 14px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    background: rgba(255, 255, 255, 0.92);
+
+    color: #101827;
+
+    font-size: 15px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+
+.login-button:hover {
+    transform: translateY(-2px);
+
+    background: white;
+
+    box-shadow:
+        0 10px 25px rgba(0, 0, 0, 0.25);
+}
+
+
+.login-message {
+    text-align: center;
+
+    margin-top: 15px;
+
+    min-height: 20px;
+
+    font-size: 13px;
+}
+
+
+.security-note {
+    display: flex;
+
+    gap: 12px;
+
+    align-items: center;
+
+    margin-top: 28px;
+
+    padding: 13px;
+
+    border-radius: 12px;
+
+    background: rgba(255, 255, 255, 0.05);
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+
+.security-icon {
+    font-size: 20px;
+}
+
+
+.security-note strong {
+    font-size: 12px;
+}
+
+
+.security-note p {
+    margin-top: 3px;
+
+    font-size: 11px;
+
+    color: rgba(255, 255, 255, 0.55);
+}
+
+
+@media (max-width: 600px) {
+
+    .login-container {
+        padding: 20px;
+    }
+
+    .login-card {
+        padding: 32px 25px;
+
+        border-radius: 20px;
+    }
+
+    .heading-section h1 {
+        font-size: 25px;
+    }
+
+    .back-button {
+        top: 15px;
+        left: 15px;
+        font-size: 12px;
+    }
+
+}
+
+
+@media (max-height: 700px) {
+
+    .login-card {
+        padding: 25px 30px;
+    }
+
+    .college-logo {
+        width: 65px;
+        height: 65px;
+    }
+
+}
+

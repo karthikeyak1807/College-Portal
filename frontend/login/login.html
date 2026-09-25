@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>College Portal Login</title>
+
+    <link
+        rel="stylesheet"
+        href="login.css"
+    >
+
+</head>
+
+
+<body>
+
+    <div class="background-overlay"></div>
+
+
+    <!-- Back to Home -->
+
+    <a
+        href="../index.html"
+        class="back-button"
+    >
+        ← Back to Home
+    </a>
+
+
+    <!-- Login Container -->
+
+    <div class="login-container">
+
+        <div class="login-card">
+
+
+            <!-- College Logo -->
+
+            <div class="logo-container">
+
+                <img
+                    src="../../assets/college-logo.jpeg"
+                    alt="College Logo"
+                    class="college-logo"
+                >
+
+            </div>
+
+
+            <!-- Heading -->
+
+            <div class="heading-section">
+
+                <p class="small-heading">
+                    COLLEGE ACCESS
+                </p>
+
+                <h1>
+                    COLLEGE PORTAL
+                </h1>
+
+                <p class="subtitle">
+                    Login to access your personalized college portal.
+                </p>
+
+            </div>
+
+
+            <!-- Login Form -->
+
+            <form id="loginForm">
+
+
+                <!-- ID -->
+
+                <div class="input-group">
+
+                    <label for="userId">
+                        ID
+                    </label>
+
+                    <input
+                        type="text"
+                        id="userId"
+                        placeholder="Enter your ID"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Password -->
+
+                <div class="input-group">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+
+                    <div class="password-wrapper">
+
+                        <input
+                            type="password"
+                            id="password"
+                            placeholder="Enter your password"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            id="togglePassword"
+                            class="toggle-password"
+                        >
+                            👁
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Options -->
+
+                <div class="login-options">
+
+                    <label class="remember-me">
+
+                        <input
+                            type="checkbox"
+                            id="rememberMe"
+                        >
+
+                        <span>
+                            Remember me
+                        </span>
+
+                    </label>
+
+
+                    <a
+                        href="#"
+                        id="forgotPassword"
+                    >
+                        Forgot password?
+                    </a>
+
+                </div>
+
+
+                <!-- Login Button -->
+
+                <button
+                    type="submit"
+                    class="login-button"
+                >
+                    Login to College Portal
+                </button>
+
+
+                <!-- Message -->
+
+                <p
+                    id="loginMessage"
+                    class="login-message"
+                ></p>
+
+
+            </form>
+
+
+            <!-- Security -->
+
+            <div class="security-note">
+
+                <span class="security-icon">
+                    🔒
+                </span>
+
+                <div>
+
+                    <strong>
+                        Secure Portal Access
+                    </strong>
+
+                    <p>
+                        Your login credentials are securely protected.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+        
+
+    </div>
+
+
+    <script src="login.js"></script>
+
+</body>
+
+</html>

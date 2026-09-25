@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Teacher Login</title>
+
+    <link
+        rel="stylesheet"
+        href="teacher-login.css"
+    >
+
+</head>
+
+
+<body>
+
+    <div class="background-overlay"></div>
+
+
+    <main class="login-page">
+
+
+        <a
+            href="../index.html"
+            class="back-button"
+        >
+            ← Back
+        </a>
+
+
+        <div class="login-card">
+
+
+            <div class="logo-container">
+
+                <img
+                    src="../../assets/college-logo.jpeg"
+                    alt="College Logo"
+                >
+
+            </div>
+
+
+            <div class="login-heading">
+
+                <span>FACULTY ACCESS</span>
+
+                <h1>TEACHER PORTAL</h1>
+
+                <p>
+                    Login to upload and manage
+                    academic materials.
+                </p>
+
+            </div>
+
+
+            <form id="teacherLoginForm">
+
+
+                <div class="input-group">
+
+                    <label>
+                        Teacher ID
+                    </label>
+
+                    <input
+                        type="text"
+                        id="teacherId"
+                        placeholder="Enter Teacher ID"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="input-group">
+
+                    <label>
+                        Password
+                    </label>
+
+                    <div class="password-wrapper">
+
+                        <input
+                            type="password"
+                            id="teacherPassword"
+                            placeholder="Enter your password"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            id="togglePassword"
+                        >
+                            👁
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="login-options">
+
+                    <label>
+
+                        <input type="checkbox">
+
+                        Remember me
+
+                    </label>
+
+
+                    <a href="#">
+                        Forgot Password?
+                    </a>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="login-button"
+                >
+
+                    Login to Teacher Portal
+                    <span>→</span>
+
+                </button>
+
+
+                <p
+                    id="loginMessage"
+                    class="login-message"
+                ></p>
+
+
+            </form>
+
+
+            <div class="security-note">
+
+                🔒 Authorized Faculty Only
+
+            </div>
+
+
+        </div>
+
+    </main>
+
+
+    <script src="teacher-login.js"></script>
+
+</body>
+
+</html>

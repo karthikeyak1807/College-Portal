@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Student Registration | College Portal</title>
+
+    <link rel="stylesheet" href="student-register.css">
+
+</head>
+
+
+<body>
+
+    <!-- Background Overlay -->
+    <div class="background-overlay"></div>
+
+
+    <!-- Main Registration Container -->
+    <main class="registration-container">
+
+
+        <!-- Registration Card -->
+        <section class="registration-card">
+
+
+            <!-- Header -->
+            <div class="registration-header">
+
+                <div class="registration-logo">
+
+                    <img
+                        src="../assets/college-logo.jpeg"
+                        alt="College Logo"
+                    >
+
+                </div>
+
+
+                <span class="registration-small">
+                    COLLEGE PORTAL
+                </span>
+
+
+                <h1>
+                    Student Registration
+                </h1>
+
+
+                <p>
+                    Create your account and request
+                    access to the college portal.
+                </p>
+
+            </div>
+
+
+            <!-- Registration Form -->
+            <form id="studentRegistrationForm">
+
+
+                <!-- Registration ID -->
+                <div class="form-group">
+
+                    <label for="studentId">
+                        Registration ID
+                    </label>
+
+                    <input
+                        type="text"
+                        id="studentId"
+                        placeholder="Enter your registration ID"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Full Name -->
+                <div class="form-group">
+
+                    <label for="studentName">
+                        Full Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="studentName"
+                        placeholder="Enter your full name"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Email -->
+                <div class="form-group">
+
+                    <label for="studentEmail">
+                        Email Address
+                    </label>
+
+                    <input
+                        type="email"
+                        id="studentEmail"
+                        placeholder="Enter your email address"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Department -->
+                <div class="form-group">
+
+                    <label for="studentDepartment">
+                        Department
+                    </label>
+
+                    <select
+                        id="studentDepartment"
+                        required
+                    >
+
+                        <option value="">
+                            Select Department
+                        </option>
+
+                        <option value="CSE">
+                            Computer Science & Engineering
+                        </option>
+
+                        <option value="ECE">
+                            Electronics & Communication Engineering
+                        </option>
+
+                        <option value="EEE">
+                            Electrical & Electronics Engineering
+                        </option>
+
+                        <option value="MECH">
+                            Mechanical Engineering
+                        </option>
+
+                        <option value="CIVIL">
+                            Civil Engineering
+                        </option>
+
+                        <option value="IT">
+                            Information Technology
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Semester -->
+                <div class="form-group">
+
+                    <label for="studentSemester">
+                        Semester
+                    </label>
+
+                    <select
+                        id="studentSemester"
+                        required
+                    >
+
+                        <option value="">
+                            Select Semester
+                        </option>
+
+                        <option value="1">
+                            1st Semester
+                        </option>
+
+                        <option value="2">
+                            2nd Semester
+                        </option>
+
+                        <option value="3">
+                            3rd Semester
+                        </option>
+
+                        <option value="4">
+                            4th Semester
+                        </option>
+
+                        <option value="5">
+                            5th Semester
+                        </option>
+
+                        <option value="6">
+                            6th Semester
+                        </option>
+
+                        <option value="7">
+                            7th Semester
+                        </option>
+
+                        <option value="8">
+                            8th Semester
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Password -->
+                <div class="form-group">
+
+                    <label for="studentPassword">
+                        Create Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="studentPassword"
+                        placeholder="Create a password"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Confirm Password -->
+                <div class="form-group">
+
+                    <label for="studentConfirmPassword">
+                        Confirm Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="studentConfirmPassword"
+                        placeholder="Confirm your password"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Message -->
+                <p
+                    id="registrationMessage"
+                    class="registration-message"
+                ></p>
+
+
+                <!-- Submit -->
+                <button
+                    type="submit"
+                    class="register-button"
+                >
+
+                    Submit Registration
+
+                    <span>→</span>
+
+                </button>
+
+
+            </form>
+
+
+            <!-- Bottom Information -->
+            <div class="registration-footer">
+
+                <p>
+                    Already registered?
+                </p>
+
+                <a href="login/login.html">
+                    Login to College Portal
+                </a>
+
+            </div>
+
+
+            <!-- Approval Information -->
+            <div class="approval-note">
+
+                <span>🔐</span>
+
+                <p>
+                    Your account will be activated
+                    after HOD approval.
+                </p>
+
+            </div>
+
+
+        </section>
+
+    </main>
+
+
+    <script src="student-register.js"></script>
+
+</body>
+
+</html>
