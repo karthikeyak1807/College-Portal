@@ -1,8 +1,10 @@
-from fastapi import FastAPI, Form, UploadFile, File
+from fastapi import FastAPI, File, Form, Request, UploadFile
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 import os
 import shutil
+import ssl
+import logging
 from datetime import datetime
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
@@ -16,11 +18,69 @@ import smtplib
 
 from email.message import EmailMessage
 from dotenv import load_dotenv
+from urllib.parse import urlencode
 
 load_dotenv()
 
-EMAIL_ADDRESS = os.getenv("EMAIL_ADDRESS")
-EMAIL_APP_PASSWORD = os.getenv("EMAIL_APP_PASSWORD")
+EMAIL_ADDRESS = os.getenv("EMAIL_ADDRESS", "").strip()
+EMAIL_APP_PASSWORD = os.getenv("EMAIL_APP_PASSWORD", "").replace(" ", "").strip()
+logger = logging.getLogger(__name__)
+
+
+def send_email(message: EmailMessage) -> None:
+    if not EMAIL_ADDRESS or not EMAIL_APP_PASSWORD:
+        raise RuntimeError(
+            "EMAIL_ADDRESS and EMAIL_APP_PASSWORD must be configured."
+        )
+
+    smtp_host = os.getenv("SMTP_HOST", "smtp.gmail.com").strip()
+    smtp_port = int(os.getenv("SMTP_PORT", "587"))
+    smtp_use_ssl = os.getenv("SMTP_USE_SSL", "false").strip().lower() == "true"
+    smtp_use_tls = os.getenv(
+        "SMTP_USE_TLS",
+        "false" if smtp_use_ssl else "true",
+    ).strip().lower() == "true"
+    smtp_timeout = float(os.getenv("SMTP_TIMEOUT", "20"))
+
+    if not smtp_host or (smtp_use_ssl and smtp_use_tls):
+        raise ValueError("SMTP settings are invalid.")
+
+    if smtp_use_ssl:
+        with smtplib.SMTP_SSL(
+            smtp_host,
+            smtp_port,
+            timeout=smtp_timeout,
+            context=ssl.create_default_context(),
+        ) as smtp:
+            smtp.login(EMAIL_ADDRESS, EMAIL_APP_PASSWORD)
+            smtp.send_message(message)
+        return
+
+    with smtplib.SMTP(
+        smtp_host,
+        smtp_port,
+        timeout=smtp_timeout,
+    ) as smtp:
+        smtp.ehlo()
+        if smtp_use_tls:
+            smtp.starttls(context=ssl.create_default_context())
+            smtp.ehlo()
+        smtp.login(EMAIL_ADDRESS, EMAIL_APP_PASSWORD)
+        smtp.send_message(message)
+
+
+def make_setup_link(
+    request: Request,
+    page_path: str,
+    query_parameters: dict[str, str],
+) -> str:
+    base_url = os.getenv("FRONTEND_BASE_URL", "").strip().rstrip("/")
+    if not base_url:
+        base_url = str(request.base_url).rstrip("/")
+    return (
+        f"{base_url}/{page_path.lstrip('/')}"
+        f"?{urlencode(query_parameters)}"
+    )
 
 def send_teacher_invitation_email(
     teacher_email,
@@ -58,10 +118,7 @@ Regards,
 College Portal"""
     )
 
-    with smtplib.SMTP("smtp.gmail.com", 587) as smtp:
-        smtp.starttls()
-        smtp.login(EMAIL_ADDRESS, EMAIL_APP_PASSWORD)
-        smtp.send_message(message)
+    send_email(message)
 
 def send_hod_invitation_email(
     hod_email,
@@ -99,13 +156,7 @@ Regards,
 College Portal"""
     )
 
-    with smtplib.SMTP("smtp.gmail.com", 587) as smtp:
-        smtp.starttls()
-        smtp.login(
-            EMAIL_ADDRESS,
-            EMAIL_APP_PASSWORD
-        )
-        smtp.send_message(message)
+    send_email(message)
 
 app = FastAPI(
     title="College Academic Portal API"
@@ -850,6 +901,7 @@ def setup_hod():
 
 @app.post("/hods")
 def create_hod(
+    request: Request,
     user_id: str = Form(...),
     name: str = Form(...),
     email: str = Form(...),
@@ -948,11 +1000,13 @@ def create_hod(
     # CREATE SETUP LINK
     # ==============================
 
-    setup_link = (
-        f"{os.getenv('FRONTEND_BASE_URL')}"
-        f"/admin/hod-set-password.html"
-        f"?token={setup_token}"
-        f"&hod_id={user_id}"
+    setup_link = make_setup_link(
+        request,
+        "admin/hod-set-password.html",
+        {
+            "token": setup_token,
+            "hod_id": user_id,
+        },
     )
 
     # ==============================
@@ -976,14 +1030,17 @@ def create_hod(
             "role": "admin"
         })
 
-        print(
-            "HOD invitation email error:",
-            error
+        logger.exception(
+            "HOD invitation email failed (%s).",
+            type(error).__name__,
         )
 
         return {
             "status": "error",
-            "message": "HOD account could not be created because the invitation email failed to send."
+            "message": (
+                "HOD account could not be created because the invitation email "
+                "could not be sent. Check the mail settings and server logs."
+            )
         }
 
     return {
@@ -1063,6 +1120,7 @@ def delete_hod(hod_id: str):
 
 @app.post("/teachers")
 def create_teacher(
+    request: Request,
     user_id: str = Form(...),
     name: str = Form(...),
     email: str = Form(...),
@@ -1131,16 +1189,13 @@ def create_teacher(
     result = users_collection.insert_one(teacher)
 
     # Create the password setup link
-    frontend_base_url = os.getenv(
-        "FRONTEND_BASE_URL",
-        "http://127.0.0.1:5500"
-    ).rstrip("/")
-
-    setup_link = (
-        f"{frontend_base_url}"
-        f"/teacher/set-password.html"
-        f"?token={setup_token}"
-        f"&teacher_id={user_id}"
+    setup_link = make_setup_link(
+        request,
+        "teacher/set-password.html",
+        {
+            "token": setup_token,
+            "teacher_id": user_id,
+        },
     )
 
     # Send invitation email
@@ -1158,14 +1213,17 @@ def create_teacher(
             "_id": result.inserted_id
         })
 
-        print("Teacher invitation email error:", error)
+        logger.exception(
+            "Teacher invitation email failed (%s).",
+            type(error).__name__,
+        )
 
         return {
             "status": "error",
             "message": (
                 "Teacher account could not be created because "
                 "the invitation email could not be sent. "
-                "Please try again."
+                "Check the mail settings and server logs, then try again."
             )
         }
 
