@@ -6,6 +6,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const profileName = document.getElementById("adminProfileName");
     const profileNameDetails = document.getElementById("adminProfileNameDetails");
     const profileAvatar = document.getElementById("adminProfileAvatar");
+    const headerName = document.getElementById("adminHeaderName");
+    const welcomeHodName = document.getElementById("welcomeHodName");
 
     if (userId && profileId) {
         profileId.textContent = userId;
@@ -18,6 +20,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (profileNameDetails) {
             profileNameDetails.textContent = userName;
+        }
+            if (headerName) {
+        headerName.textContent = userName;
+        }
+
+        if (welcomeHodName) {
+            welcomeHodName.textContent = userName;
         }
 
         if (profileAvatar) {
@@ -124,6 +133,15 @@ document.addEventListener("DOMContentLoaded", function () {
                     "Manage registered teachers";
 
             }
+            else if (sectionName === "hodManagement") {
+
+                pageTitle.textContent =
+                    "HOD Management";
+
+                pageSubtitle.textContent =
+                    "Create and manage HOD accounts";
+
+            }
 
             else if (sectionName === "studentRequests") {
 
@@ -174,7 +192,7 @@ else if (sectionName === "studentAccounts") {
 
             const materialsResponse =
                 await fetch(
-                    "http://127.0.0.1:8000/materials"
+                    "/materials"
                 );
 
             const materialsData =
@@ -185,7 +203,7 @@ else if (sectionName === "studentAccounts") {
 
             const teachersResponse =
                 await fetch(
-                    "http://127.0.0.1:8000/teachers"
+                    "/teachers"
                 );
 
             const teachersData =
@@ -196,7 +214,7 @@ else if (sectionName === "studentAccounts") {
 
             const studentsResponse =
                 await fetch(
-                    "http://127.0.0.1:8000/students"
+                    "/students"
                 );
 
             const studentsData =
@@ -640,7 +658,7 @@ if (uploadForm) {
 
                 const response =
                     await fetch(
-                        "http://127.0.0.1:8000/materials/upload",
+                        "/materials/upload",
                         {
                             method: "POST",
                             body: formData
@@ -768,7 +786,7 @@ if (uploadForm) {
 
             const response =
                 await fetch(
-                    "http://127.0.0.1:8000/materials"
+                    "/materials"
                 );
 
 
@@ -1190,7 +1208,7 @@ async function loadRecentMaterials() {
 
         const response =
             await fetch(
-                "http://127.0.0.1:8000/materials"
+                "/materials"
             );
 
 
@@ -1494,7 +1512,7 @@ document.addEventListener(
         if (action === "view") {
 
             const viewUrl =
-                "http://127.0.0.1:8000/materials/" +
+                "/materials/" +
                 encodeURIComponent(materialId) +
                 "/view";
 
@@ -1516,7 +1534,7 @@ document.addEventListener(
         if (action === "download") {
 
             const downloadUrl =
-                "http://127.0.0.1:8000/materials/" +
+                "/materials/" +
                 encodeURIComponent(materialId) +
                 "/download";
 
@@ -1573,7 +1591,7 @@ document.addEventListener(
 
                 const response =
                     await fetch(
-                        "http://127.0.0.1:8000/materials/" +
+                        "/materials/" +
                         encodeURIComponent(materialId) +
                         "?uploader_id=" +
                         encodeURIComponent(uploaderId),
@@ -1683,7 +1701,7 @@ async function loadStudentRequests() {
 
         const response =
             await fetch(
-                "http://127.0.0.1:8000/student-requests"
+                "/student-requests"
             );
 
 
@@ -1842,7 +1860,7 @@ async function approveStudent(studentId) {
 
         const response =
             await fetch(
-                "http://127.0.0.1:8000/students/" +
+                "/students/" +
                 encodeURIComponent(studentId) +
                 "/approve",
                 {
@@ -1912,7 +1930,7 @@ async function deleteStudentRequest(studentId) {
 
         const response =
             await fetch(
-                "http://127.0.0.1:8000/students/" +
+                "/students/" +
                 encodeURIComponent(studentId),
                 {
                     method: "DELETE"
@@ -1993,7 +2011,7 @@ async function approveAllStudents() {
 
         const response =
             await fetch(
-                "http://127.0.0.1:8000/students/approve-all",
+                "/students/approve-all",
                 {
                     method: "PUT"
                 }
@@ -2143,7 +2161,7 @@ async function viewStudentRequest(studentId) {
 
         const response =
             await fetch(
-                "http://127.0.0.1:8000/students/" +
+                "/students/" +
                 encodeURIComponent(studentId)
             );
 
@@ -2262,7 +2280,7 @@ loadStudentRequests();
 
             const response =
                 await fetch(
-                    "http://127.0.0.1:8000/students"
+                    "/students"
                 );
 
 
@@ -2455,7 +2473,7 @@ loadStudentRequests();
 
             const response =
                 await fetch(
-                    "http://127.0.0.1:8000/students/" +
+                    "/students/" +
                     encodeURIComponent(studentId)
                 );
 
@@ -2545,7 +2563,7 @@ loadStudentRequests();
 
             const response =
                 await fetch(
-                    "http://127.0.0.1:8000/students/" +
+                    "/students/" +
                     encodeURIComponent(studentId),
                     {
                         method: "DELETE"
@@ -2798,90 +2816,152 @@ loadStudentRequests();
     }
 
 
+if (createTeacherForm) {
 
-    /* ================= CREATE TEACHER ================= */
+    createTeacherForm.addEventListener(
+        "submit",
+        async function (event) {
 
-    if (createTeacherForm) {
-
-        createTeacherForm.addEventListener(
-            "submit",
-            async function (event) {
-
-                event.preventDefault();
+            event.preventDefault();
 
 
-                const teacherId =
-                    document.getElementById(
-                        "teacherId"
-                    ).value.trim();
-
-                const teacherName =
-                    document.getElementById(
-                        "teacherName"
-                    ).value.trim();
-
-                const teacherEmail =
-                    document.getElementById(
-                        "teacherEmail"
-                    ).value.trim();
-
-                const department =
-                    document.getElementById(
-                        "teacherDepartment"
-                    ).value;
-
-                const subject =
-                    document.getElementById(
-                        "teacherSubject"
-                    ).value.trim();
-
-                const designation =
-                    document.getElementById(
-                        "teacherDesignation"
-                    ).value;
-
-                const password =
-                    document.getElementById(
-                        "teacherPassword"
-                    ).value;
-
-                const confirmPassword =
-                    document.getElementById(
-                        "teacherConfirmPassword"
-                    ).value;
+            const teacherId =
+                document.getElementById(
+                    "teacherId"
+                ).value.trim();
 
 
-
-                /* PASSWORD CHECK */
-
-                if (password !== confirmPassword) {
-
-                    teacherFormMessage.textContent =
-                        "Passwords do not match.";
-
-                    teacherFormMessage.style.color =
-                        "#dc2626";
-
-                    return;
-
-                }
+            const teacherName =
+                document.getElementById(
+                    "teacherName"
+                ).value.trim();
 
 
+            const teacherEmail =
+                document.getElementById(
+                    "teacherEmail"
+                ).value.trim();
 
-                /* BASIC VALIDATION */
+
+            const department =
+                document.getElementById(
+                    "teacherDepartment"
+                ).value;
+
+
+            const subject =
+                document.getElementById(
+                    "teacherSubject"
+                ).value.trim();
+
+
+            const designation =
+                document.getElementById(
+                    "teacherDesignation"
+                ).value;
+
+
+            /* ================= VALIDATION ================= */
+
+            if (
+                !teacherId ||
+                !teacherName ||
+                !teacherEmail ||
+                !department ||
+                !subject ||
+                !designation
+            ) {
+
+                teacherFormMessage.textContent =
+                    "Please fill in all required fields.";
+
+                teacherFormMessage.style.color =
+                    "#dc2626";
+
+                return;
+
+            }
+
+
+            /* ================= STATUS ================= */
+
+            teacherFormMessage.textContent =
+                "Creating teacher account...";
+
+            teacherFormMessage.style.color =
+                "#2563eb";
+
+
+            try {
+
+                /* ================= FORM DATA ================= */
+
+                const formData =
+                    new FormData();
+
+
+                formData.append(
+                    "user_id",
+                    teacherId
+                );
+
+
+                formData.append(
+                    "name",
+                    teacherName
+                );
+
+
+                formData.append(
+                    "email",
+                    teacherEmail
+                );
+
+
+                formData.append(
+                    "department",
+                    department
+                );
+
+
+                formData.append(
+                    "subject",
+                    subject
+                );
+
+
+                formData.append(
+                    "designation",
+                    designation
+                );
+
+
+                /* ================= SEND TO BACKEND ================= */
+
+                const response =
+                    await fetch(
+                        "/teachers",
+                        {
+                            method: "POST",
+                            body: formData
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                /* ================= ERROR ================= */
 
                 if (
-                    !teacherId ||
-                    !teacherName ||
-                    !teacherEmail ||
-                    !department ||
-                    !subject ||
-                    !designation ||
-                    !password
+                    !response.ok ||
+                    data.status !== "success"
                 ) {
 
                     teacherFormMessage.textContent =
-                        "Please fill in all required fields.";
+                        data.message ||
+                        "Unable to create teacher account.";
 
                     teacherFormMessage.style.color =
                         "#dc2626";
@@ -2891,197 +2971,58 @@ loadStudentRequests();
                 }
 
 
+                /* ================= SUCCESS ================= */
 
                 teacherFormMessage.textContent =
-                    "Creating teacher account...";
+                    "Teacher account created successfully!";
 
                 teacherFormMessage.style.color =
-                    "#2563eb";
+                    "#16a34a";
 
 
-
-              try {
-
-    const formData = new FormData();
-
-    formData.append(
-        "user_id",
-        teacherId
-    );
-
-    formData.append(
-        "name",
-        teacherName
-    );
-
-    formData.append(
-        "email",
-        teacherEmail
-    );
-
-    formData.append(
-        "department",
-        department
-    );
-
-    formData.append(
-        "subject",
-        subject
-    );
-
-    formData.append(
-        "designation",
-        designation
-    );
-
-    formData.append(
-        "password",
-        password
-    );
+                alert(
+                    "Teacher account created successfully! 🎉\n\n" +
+                    "Teacher ID: " +
+                    teacherId +
+                    "\nName: " +
+                    teacherName +
+                    "\nEmail: " +
+                    teacherEmail +
+                    "\n\nA password setup invitation will be sent to the teacher."
+                );
 
 
-    /* ================= PROFILE PHOTO ================= */
+                /* ================= RESET ================= */
 
-    if (
-        teacherPhoto &&
-        teacherPhoto.files.length > 0
-    ) {
-
-        formData.append(
-            "photo",
-            teacherPhoto.files[0]
-        );
-
-    }
+                createTeacherForm.reset();
 
 
-    /* ================= SEND TO BACKEND ================= */
+                /* ================= REFRESH TEACHERS ================= */
 
-    const response =
-        await fetch(
-            "http://127.0.0.1:8000/teachers",
-            {
-                method: "POST",
-                body: formData
+                await loadRegisteredTeachers();
+
             }
-        );
+
+            catch (error) {
+
+                console.error(
+                    "Teacher creation error:",
+                    error
+                );
 
 
-    const data =
-        await response.json();
+                teacherFormMessage.textContent =
+                    "Unable to connect to the server.";
 
-
-    /* ================= BACKEND ERROR ================= */
-
-    if (!response.ok) {
-
-        let errorMessage =
-            "Unable to create teacher account.";
-
-        if (data.detail) {
-
-            if (Array.isArray(data.detail)) {
-
-                errorMessage =
-                    data.detail
-                        .map(function (error) {
-                            return error.msg;
-                        })
-                        .join("\n");
-
-            } else {
-
-                errorMessage =
-                    data.detail;
+                teacherFormMessage.style.color =
+                    "#dc2626";
 
             }
 
         }
-        else if (data.message) {
-
-            errorMessage =
-                data.message;
-
-        }
-
-
-        teacherFormMessage.textContent =
-            errorMessage;
-
-        teacherFormMessage.style.color =
-            "#dc2626";
-
-        return;
-    }
-
-
-    /* ================= APPLICATION ERROR ================= */
-
-    if (data.status === "error") {
-
-        teacherFormMessage.textContent =
-            data.message ||
-            "Unable to create teacher account.";
-
-        teacherFormMessage.style.color =
-            "#dc2626";
-
-        return;
-    }
-
-
-    /* ================= SUCCESS ================= */
-
-    teacherFormMessage.textContent =
-        "Teacher account created successfully!";
-
-    teacherFormMessage.style.color =
-        "#16a34a";
-
-
-    alert(
-        "Teacher account created successfully! 🎉\n\n" +
-        "Teacher ID: " +
-        teacherId +
-        "\nName: " +
-        teacherName +
-        "\nDepartment: " +
-        department +
-        "\nSubject: " +
-        subject
     );
 
-
-    createTeacherForm.reset();
-
-
-    if (teacherPhotoName) {
-
-        teacherPhotoName.textContent = "";
-
-    }
-
 }
-catch (error) {
-
-    console.error(
-        "Teacher creation error:",
-        error
-    );
-
-
-    teacherFormMessage.textContent =
-        "Unable to connect to the server.";
-
-    teacherFormMessage.style.color =
-        "#dc2626";
-
-}
-
-            }
-        );
-
-    }
 
     /* =========================================================
      
@@ -3131,7 +3072,7 @@ catch (error) {
 
             const response =
                 await fetch(
-                    "http://127.0.0.1:8000/teachers"
+                    "/teachers"
                 );
 
 
@@ -3238,7 +3179,7 @@ catch (error) {
                         avatarHTML = `
                             <div class="teacher-card-avatar">
                                 <img
-                                    src="http://127.0.0.1:8000/uploads/${encodeURIComponent(
+                                    src="/uploads/${encodeURIComponent(
                                         teacher.profile_photo
                                     )}"
                                     alt="${escapeStudentHtml(name)}"
@@ -3406,7 +3347,7 @@ catch (error) {
 
                     const response =
                         await fetch(
-                            "http://127.0.0.1:8000/teachers/" +
+                            "/teachers/" +
                             encodeURIComponent(teacherId),
                             {
                                 method: "DELETE"
@@ -3587,7 +3528,7 @@ async function searchSubjects(searchText) {
 
         const response =
             await fetch(
-                "http://127.0.0.1:8000/subjects?search=" +
+                "/subjects?search=" +
                 encodeURIComponent(searchText)
             );
 
@@ -3781,6 +3722,584 @@ if (subjectSuggestions) {
 
 }
 
-});
+/* =========================================================
+   HOD MANAGEMENT
+   ========================================================= */
 
-// here
+
+/* ================= SHOW CREATE HOD FORM ================= */
+
+const showCreateHodBtn =
+    document.getElementById("showCreateHodBtn");
+
+const createHodFormContainer =
+    document.getElementById("createHodFormContainer");
+
+const cancelHodBtn =
+    document.getElementById("cancelHodBtn");
+
+
+if (showCreateHodBtn && createHodFormContainer) {
+
+    showCreateHodBtn.addEventListener(
+        "click",
+        function () {
+
+            createHodFormContainer.classList.toggle("show");
+
+        }
+    );
+
+}
+
+
+if (cancelHodBtn && createHodFormContainer) {
+
+    cancelHodBtn.addEventListener(
+        "click",
+        function () {
+
+            createHodFormContainer.classList.remove("show");
+
+        }
+    );
+
+}
+
+
+/* ================= CREATE HOD ================= */
+
+const createHodForm =
+    document.getElementById("createHodForm");
+
+const hodFormMessage =
+    document.getElementById("hodFormMessage");
+
+
+if (createHodForm) {
+
+    createHodForm.addEventListener(
+        "submit",
+        async function (event) {
+
+            event.preventDefault();
+
+
+            const hodId =
+                document.getElementById("hodId")
+                    .value
+                    .trim()
+                    .toUpperCase();
+
+
+            const hodName =
+                document.getElementById("hodName")
+                    .value
+                    .trim();
+
+
+            const hodEmail =
+                document.getElementById("hodEmail")
+                    .value
+                    .trim()
+                    .toLowerCase();
+                const hodDepartment = document.getElementById("hodDepartment").value.trim();
+
+
+            if (!hodId || !hodName || !hodEmail || !hodDepartment) {
+
+                hodFormMessage.textContent =
+                    "Please fill in all HOD details.";
+
+                hodFormMessage.style.color =
+                    "#dc2626";
+
+                return;
+
+            }
+
+
+            if (!/^HOD\d{2,}$/.test(hodId)) {
+
+                hodFormMessage.textContent =
+                    "HOD ID must be in the format HOD02, HOD03, etc.";
+
+                hodFormMessage.style.color =
+                    "#dc2626";
+
+                return;
+
+            }
+
+
+            const formData =
+                new FormData();
+
+
+            formData.append(
+                "user_id",
+                hodId
+            );
+
+
+            formData.append(
+                "name",
+                hodName
+            );
+
+
+            formData.append(
+                "email",
+                hodEmail
+            );
+            formData.append("department", hodDepartment);
+
+
+            const submitButton =
+                createHodForm.querySelector(
+                    'button[type="submit"]'
+                );
+
+
+            const originalButtonText =
+                submitButton
+                    ? submitButton.textContent
+                    : "";
+
+
+            if (submitButton) {
+
+                submitButton.disabled = true;
+
+                submitButton.textContent =
+                    "Creating...";
+
+            }
+
+
+            hodFormMessage.textContent =
+                "Creating HOD account and sending invitation...";
+
+            hodFormMessage.style.color =
+                "#2563eb";
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/hods",
+                        {
+                            method: "POST",
+                            body: formData
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (
+                    !response.ok ||
+                    data.status !== "success"
+                ) {
+
+                    throw new Error(
+                        data.message ||
+                        "Unable to create HOD account."
+                    );
+
+                }
+
+
+                hodFormMessage.textContent =
+                    "HOD account created successfully! Invitation email sent.";
+
+                hodFormMessage.style.color =
+                    "#16a34a";
+
+
+                alert(
+                    "HOD account created successfully! 🎉\n\n" +
+                    "HOD ID: " + hodId +
+                    "\nName: " + hodName +
+                    "\nEmail: " + hodEmail +
+                    "\n\nA password setup invitation has been sent to the HOD."
+                );
+
+
+                createHodForm.reset();
+
+                createHodFormContainer.classList.remove(
+                    "show"
+                );
+
+
+                await loadRegisteredHods();
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "HOD creation error:",
+                    error
+                );
+
+
+                hodFormMessage.textContent =
+                    error.message ||
+                    "Unable to create HOD account.";
+
+                hodFormMessage.style.color =
+                    "#dc2626";
+
+            }
+
+            finally {
+
+                if (submitButton) {
+
+                    submitButton.disabled =
+                        false;
+
+                    submitButton.textContent =
+                        originalButtonText;
+
+                }
+
+            }
+
+        }
+    );
+
+}
+
+
+/* ================= LOAD REGISTERED HODS ================= */
+
+async function loadRegisteredHods() {
+
+    const hodGrid =
+        document.getElementById("hodGrid");
+
+
+    if (!hodGrid) {
+        return;
+    }
+
+
+    hodGrid.innerHTML = `
+        <div class="teacher-card">
+
+            <div class="teacher-card-avatar">
+                👔
+            </div>
+
+            <h3>
+                Loading HODs...
+            </h3>
+
+            <p>
+                Please wait
+            </p>
+
+        </div>
+    `;
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/hods"
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            data.status !== "success"
+        ) {
+
+            throw new Error(
+                data.message ||
+                "Unable to load HOD accounts."
+            );
+
+        }
+
+
+        const hods =
+            data.hods || [];
+
+
+        if (hods.length === 0) {
+
+            hodGrid.innerHTML = `
+                <div class="teacher-card">
+
+                    <div class="teacher-card-avatar">
+                        👔
+                    </div>
+
+                    <h3>
+                        No HOD accounts found
+                    </h3>
+
+                    <p>
+                        No HODs are registered yet.
+                    </p>
+
+                </div>
+            `;
+
+            return;
+
+        }
+
+
+        hodGrid.innerHTML =
+            hods.map(function (hod) {
+
+                const name =
+                    hod.name || "HOD";
+
+                const initials =
+                    getInitials(name);
+
+
+                const primaryBadge =
+                    hod.is_primary_hod
+                        ? `<span style="
+                            color:#16a34a;
+                            font-weight:700;
+                        ">
+                            ⭐ Primary HOD
+                           </span>`
+                        : `<span>
+                            HOD
+                           </span>`;
+
+
+                const deleteButton =
+                    hod.is_primary_hod
+                        ? ""
+                        : `
+                            <div class="teacher-card-actions">
+
+                                <button
+                                    type="button"
+                                    class="teacher-delete-btn"
+                                    data-hod-id="${escapeStudentHtml(
+                                        hod.user_id || ""
+                                    )}"
+                                >
+                                    🗑 Delete HOD
+                                </button>
+
+                            </div>
+                        `;
+
+
+                return `
+                    <div class="teacher-card">
+
+                        <div class="teacher-card-avatar">
+                            ${escapeStudentHtml(initials)}
+                        </div>
+                        
+                        <div class="teacher-card-email">
+    🏢 ${escapeStudentHtml(hod.department || "Not specified")}
+</div>
+
+
+                        <h3>
+                            ${escapeStudentHtml(name)}
+                        </h3>
+
+
+                        <p>
+                            ${escapeStudentHtml(
+                                hod.user_id || "—"
+                            )}
+                        </p>
+
+
+                        <span>
+                            ${escapeStudentHtml(
+                                hod.email || "—"
+                            )}
+                        </span>
+
+
+                        <span>
+                            ${primaryBadge}
+                        </span>
+
+
+                        ${deleteButton}
+
+                    </div>
+                `;
+
+            }).join("");
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Load HODs error:",
+            error
+        );
+
+
+        hodGrid.innerHTML = `
+            <div class="teacher-card">
+
+                <div class="teacher-card-avatar">
+                    ⚠️
+                </div>
+
+                <h3>
+                    Unable to load HODs
+                </h3>
+
+                <p>
+                    Please check the backend connection.
+                </p>
+
+            </div>
+        `;
+
+    }
+
+}
+
+
+/* ================= DELETE HOD ================= */
+
+document.addEventListener(
+    "click",
+    async function (event) {
+
+        const button =
+            event.target.closest(
+                ".teacher-delete-btn[data-hod-id]"
+            );
+
+
+        if (!button) {
+            return;
+        }
+
+
+        const hodId =
+            button.getAttribute(
+                "data-hod-id"
+            );
+
+
+        if (!hodId) {
+            return;
+        }
+
+
+        const confirmation =
+            confirm(
+                "Are you sure you want to delete HOD " +
+                hodId +
+                "?"
+            );
+
+
+        if (!confirmation) {
+            return;
+        }
+
+
+        button.disabled = true;
+
+        button.textContent =
+            "Deleting...";
+
+
+        try {
+
+            const response =
+                await fetch(
+                    "/hods/" +
+                    encodeURIComponent(hodId),
+                    {
+                        method: "DELETE"
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (
+                !response.ok ||
+                data.status !== "success"
+            ) {
+
+                alert(
+                    data.message ||
+                    "Unable to delete HOD."
+                );
+
+                button.disabled = false;
+
+                button.textContent =
+                    "🗑 Delete HOD";
+
+                return;
+
+            }
+
+
+            alert(
+                "HOD account deleted successfully! 🗑️"
+            );
+
+
+            await loadRegisteredHods();
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Delete HOD error:",
+                error
+            );
+
+
+            alert(
+                "Unable to connect to the backend."
+            );
+
+
+            button.disabled = false;
+
+            button.textContent =
+                "🗑 Delete HOD";
+
+        }
+
+    }
+);
+
+
+/* ================= INITIAL LOAD ================= */
+
+loadRegisteredHods();
+
+});

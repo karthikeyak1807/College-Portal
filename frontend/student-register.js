@@ -129,7 +129,7 @@ if (!studentIdPattern.test(studentId)) {
 
                 const response =
                     await fetch(
-                        "http://127.0.0.1:8000/students",
+                        "/students",
                         {
                             method: "POST",
 

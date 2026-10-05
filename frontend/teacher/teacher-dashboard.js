@@ -394,7 +394,7 @@ uploadForm.addEventListener(
 
             const response =
                 await fetch(
-                    "http://127.0.0.1:8000/materials/upload",
+                    "/materials/upload",
                     {
                         method: "POST",
                         body: formData
@@ -550,7 +550,7 @@ async function loadTeacherMaterials() {
 
         const response =
             await fetch(
-                "http://127.0.0.1:8000/materials?uploader_id=" +
+                "/materials?uploader_id=" +
                 encodeURIComponent(teacherId)
             );
 
@@ -764,7 +764,7 @@ document.addEventListener(
         if (action === "view") {
 
             const viewUrl =
-                "http://127.0.0.1:8000/materials/" +
+                "/materials/" +
                 encodeURIComponent(materialId) +
                 "/view";
 
@@ -782,7 +782,7 @@ document.addEventListener(
         if (action === "download") {
 
             const downloadUrl =
-                "http://127.0.0.1:8000/materials/" +
+                "/materials/" +
                 encodeURIComponent(materialId) +
                 "/download";
 
@@ -818,7 +818,7 @@ document.addEventListener(
     try {
 
         const response = await fetch(
-            "http://127.0.0.1:8000/materials/" +
+            "/materials/" +
             encodeURIComponent(materialId) +
             "?uploader_id=" +
             encodeURIComponent(teacherId),
@@ -927,7 +927,7 @@ async function loadTeacherProfile() {
 
         const response =
             await fetch(
-                "http://127.0.0.1:8000/teachers"
+                "/teachers"
             );
 
         const data =
@@ -1045,7 +1045,7 @@ if (
 ) {
 
     headerTeacherPhoto.src =
-        "http://127.0.0.1:8000/uploads/" +
+        "/uploads/" +
         encodeURIComponent(
             teacher.profile_photo
         );
@@ -1153,7 +1153,7 @@ const profileAvatarInitials =
      if (profileTeacherPhoto && teacher.profile_photo) {
 
     profileTeacherPhoto.src =
-        "http://127.0.0.1:8000/uploads/" +
+        "/uploads/" +
         encodeURIComponent(
             teacher.profile_photo
         );
@@ -1317,7 +1317,7 @@ async function loadTeacherDashboardData() {
 
         const response =
             await fetch(
-                "http://127.0.0.1:8000/materials?uploader_id=" +
+                "/materials?uploader_id=" +
                 encodeURIComponent(teacherId)
             );
 
@@ -1431,6 +1431,63 @@ async function loadTeacherDashboardData() {
                 subjects.size;
 
         }
+
+/* ================= STUDENTS REACHED ================= */
+
+const studentsReachedElement =
+    document.getElementById(
+        "studentsReached"
+    );
+
+if (studentsReachedElement) {
+
+    try {
+
+        const reachResponse =
+            await fetch(
+                "/teachers/" +
+                encodeURIComponent(teacherId) +
+                "/students-reached"
+            );
+
+        const reachData =
+            await reachResponse.json();
+
+        if (
+            reachResponse.ok &&
+            reachData.status === "success"
+        ) {
+
+            studentsReachedElement.textContent =
+                reachData.students_reached || 0;
+
+        }
+        else {
+
+            studentsReachedElement.textContent =
+                0;
+
+            console.error(
+                "Unable to load students reached:",
+                reachData.message
+            );
+
+        }
+
+    }
+    catch (error) {
+
+        console.error(
+            "Students reached loading error:",
+            error
+        );
+
+        studentsReachedElement.textContent =
+            0;
+
+    }
+
+}
 
 
         /* ================= RECENT MATERIALS ================= */
@@ -1655,7 +1712,7 @@ async function searchSubjects(searchText) {
     try {
 
         const response = await fetch(
-            "http://127.0.0.1:8000/subjects?search=" +
+            "/subjects?search=" +
             encodeURIComponent(searchText)
         );
 
@@ -1786,4 +1843,145 @@ if (subjectSuggestions) {
             subjectSuggestions.style.display = "none";
         }
     );
+}
+
+// ==============================
+// TEACHER PROFILE PHOTO UPLOAD
+// ==============================
+
+const profilePhotoInput = document.getElementById("profilePhotoInput");
+const changeProfilePhotoBtn = document.getElementById("changeProfilePhotoBtn");
+
+if (profilePhotoInput && changeProfilePhotoBtn) {
+
+    changeProfilePhotoBtn.addEventListener("click", function () {
+        profilePhotoInput.click();
+    });
+
+    profilePhotoInput.addEventListener("change", async function () {
+
+        const file = profilePhotoInput.files[0];
+
+        if (!file) {
+            return;
+        }
+
+        // Frontend file-size check
+        const maxSize = 2 * 1024 * 1024;
+
+        if (file.size > maxSize) {
+            alert("Profile photo must be under 2 MB.");
+            profilePhotoInput.value = "";
+            return;
+        }
+
+        // Check file type
+        const allowedTypes = [
+            "image/jpeg",
+            "image/png",
+            "image/webp"
+        ];
+
+        if (!allowedTypes.includes(file.type)) {
+            alert("Please select a JPG, PNG or WEBP image.");
+            profilePhotoInput.value = "";
+            return;
+        }
+
+        const teacherId = sessionStorage.getItem("userId");
+
+        if (!teacherId) {
+            alert("Teacher session not found. Please login again.");
+            return;
+        }
+
+        const formData = new FormData();
+
+        formData.append("teacher_id", teacherId);
+        formData.append("file", file);
+
+        try {
+
+            changeProfilePhotoBtn.disabled = true;
+            changeProfilePhotoBtn.textContent = "Uploading...";
+
+            const response = await fetch(
+                "/teachers/profile-photo",
+                {
+                    method: "POST",
+                    body: formData
+                }
+            );
+
+            const data = await response.json();
+
+            if (data.status !== "success") {
+                alert(data.message || "Failed to upload profile photo.");
+                return;
+            }
+
+            // Build the image URL returned by backend
+            const photoUrl =
+                "" +
+                data.profile_photo_url;
+
+            // Update large profile photo
+            const profileTeacherPhoto =
+                document.getElementById("profileTeacherPhoto");
+
+            const profileAvatarInitials =
+                document.getElementById("profileAvatarInitials");
+
+            if (profileTeacherPhoto) {
+                profileTeacherPhoto.src =
+                    photoUrl + "?t=" + Date.now();
+
+                profileTeacherPhoto.style.display = "block";
+            }
+
+            if (profileAvatarInitials) {
+                profileAvatarInitials.style.display = "none";
+            }
+
+            // Also update the top-right teacher photo if it exists
+            const teacherPhoto =
+                document.getElementById("teacherPhoto");
+
+            const teacherAvatarInitials =
+                document.getElementById("teacherAvatarInitials");
+
+            if (teacherPhoto) {
+                teacherPhoto.src =
+                    photoUrl + "?t=" + Date.now();
+
+                teacherPhoto.style.display = "block";
+            }
+
+            if (teacherAvatarInitials) {
+                teacherAvatarInitials.style.display = "none";
+            }
+
+            alert("Profile photo updated successfully!");
+
+        } catch (error) {
+
+            console.error(
+                "Profile photo upload error:",
+                error
+            );
+
+            alert(
+                "Could not upload profile photo. " +
+                "Please make sure the backend is running."
+            );
+
+        } finally {
+
+            changeProfilePhotoBtn.disabled = false;
+            changeProfilePhotoBtn.textContent =
+                "📷 Change Profile Photo";
+
+            profilePhotoInput.value = "";
+        }
+    });
 }

@@ -36,7 +36,7 @@ async function loadPortalStats() {
     try {
 
         const response = await fetch(
-            "http://127.0.0.1:8000/portal-stats"
+            "/portal-stats"
         );
 
         const data = await response.json();

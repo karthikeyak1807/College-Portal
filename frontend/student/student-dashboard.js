@@ -170,51 +170,6 @@ menuButton.addEventListener(
 // MATERIAL SEARCH
 // ======================================
 
-const searchInput =
-    document.getElementById("materialSearch");
-
-
-searchInput.addEventListener(
-    "input",
-    function () {
-
-        const searchText =
-            searchInput.value.toLowerCase();
-
-
-        const teacherCards =
-            document.querySelectorAll(
-                ".teacher-material-card"
-            );
-
-
-        teacherCards.forEach(
-            function (card) {
-
-                const cardText =
-                    card.textContent.toLowerCase();
-
-
-                if (
-                    cardText.includes(searchText)
-                ) {
-
-                    card.style.display =
-                        "block";
-
-                } else {
-
-                    card.style.display =
-                        "none";
-
-                }
-
-            }
-        );
-
-    }
-);
-
 
 // ======================================
 // MATERIAL VIEW / DOWNLOAD
@@ -241,35 +196,58 @@ document.addEventListener("click", function (event) {
     }
 
 
-    // ==============================
-    // VIEW MATERIAL
-    // ==============================
+    // ==================================
+    // GET LOGGED-IN STUDENT ID
+    // ==================================
 
-    if (action === "view") {
+    const studentId =
+        sessionStorage.getItem("userId");
 
-        const viewUrl =
-            "http://127.0.0.1:8000/materials/" +
-            encodeURIComponent(materialId) +
-            "/view";
+    if (!studentId) {
 
-        window.open(viewUrl, "_blank");
+        alert(
+            "Student session not found. Please login again."
+        );
 
         return;
     }
 
 
-    // ==============================
+    // ==================================
+    // VIEW MATERIAL
+    // ==================================
+
+    if (action === "view") {
+
+        const viewUrl =
+            "/materials/" +
+            encodeURIComponent(materialId) +
+            "/view?student_id=" +
+            encodeURIComponent(studentId);
+
+        window.open(
+            viewUrl,
+            "_blank"
+        );
+
+        return;
+    }
+
+
+    // ==================================
     // DOWNLOAD MATERIAL
-    // ==============================
+    // ==================================
 
     if (action === "download") {
 
         const downloadUrl =
-            "http://127.0.0.1:8000/materials/" +
+            "/materials/" +
             encodeURIComponent(materialId) +
-            "/download";
+            "/download?student_id=" +
+            encodeURIComponent(studentId);
 
-        const link = document.createElement("a");
+        const link =
+            document.createElement("a");
 
         link.href = downloadUrl;
 
@@ -285,7 +263,6 @@ document.addEventListener("click", function (event) {
     }
 
 });
-
 
 
 // ======================================
@@ -330,7 +307,7 @@ async function loadStudentProfile() {
     try {
 
         const response = await fetch(
-            "http://127.0.0.1:8000/students/" +
+            "/students/" +
             encodeURIComponent(userId)
         );
 
@@ -449,7 +426,7 @@ async function loadStudentProfile() {
     try {
 
         const response = await fetch(
-            "http://127.0.0.1:8000/students/" +
+            "/students/" +
             encodeURIComponent(userId)
         );
 
@@ -579,7 +556,7 @@ async function loadStudentMaterials() {
     try {
 
         const response = await fetch(
-            "http://127.0.0.1:8000/materials"
+            "/materials"
         );
 
         const data = await response.json();
@@ -733,40 +710,43 @@ if (searchBox) {
     }
 
 
-    // ==================================
-    // GROUP MATERIALS BY UPLOADER
-    // ==================================
 
-    const groupedMaterials = {};
+// ==================================
+// GROUP MATERIALS BY UPLOADER
+// ==================================
 
-
-    materials.forEach(function (material) {
-
-        const uploaderId =
-            material.uploader_id ||
-            "college-staff";
+const groupedMaterials = {};
 
 
-        if (!groupedMaterials[uploaderId]) {
+materials.forEach(function (material) {
 
-            groupedMaterials[uploaderId] = {
-
-                name:
-                    material.uploader_name ||
-                    "College Staff",
-
-                materials: []
-
-            };
-
-        }
+    const uploaderId =
+        material.uploader_id ||
+        "college-staff";
 
 
-        groupedMaterials[uploaderId]
-            .materials
-            .push(material);
+    if (!groupedMaterials[uploaderId]) {
 
-    });
+        groupedMaterials[uploaderId] = {
+
+            uploaderId: uploaderId,
+
+            name:
+                material.uploader_name ||
+                "College Staff",
+
+            materials: []
+
+        };
+
+    }
+
+
+    groupedMaterials[uploaderId]
+        .materials
+        .push(material);
+
+});
 
 
     // ==================================
@@ -776,12 +756,16 @@ if (searchBox) {
     Object.values(groupedMaterials)
         .forEach(function (group) {
 
-        const teacherCard =
-            document.createElement("div");
+      const teacherCard =
+    document.createElement("div");
 
         teacherCard.className =
             "teacher-material-card";
 
+        teacherCard.setAttribute(
+            "data-uploader-id",
+               group.uploaderId
+        );
 
         const initials =
             getInitials(group.name);
@@ -1039,7 +1023,7 @@ async function loadDashboardData() {
     try {
 
         const response = await fetch(
-            "http://127.0.0.1:8000/materials"
+            "/materials"
         );
 
         const data = await response.json();
@@ -1319,3 +1303,1012 @@ function formatMaterialDate(dateValue) {
 // ======================================
 
 loadDashboardData();
+
+// ============================================================
+// STUDENT MATERIAL SEARCH
+// MATERIAL + SUBJECT + TEACHER
+// ============================================================
+
+const studentMaterialSearch =
+    document.getElementById("materialSearch");
+
+const studentMaterialSuggestions =
+    document.getElementById(
+        "studentSubjectSuggestions"
+    );
+
+let studentSearchTimer = null;
+
+let studentSearchMaterials = [];
+
+let studentSearchTeachers = [];
+
+
+// ============================================================
+// SEARCH INPUT
+// ============================================================
+
+if (
+    studentMaterialSearch &&
+    studentMaterialSuggestions
+) {
+
+    // --------------------------------------------------------
+    // TYPE IN SEARCH BOX
+    // --------------------------------------------------------
+
+    studentMaterialSearch.addEventListener(
+        "input",
+        function () {
+
+            const searchText =
+                studentMaterialSearch.value.trim();
+
+
+            clearTimeout(
+                studentSearchTimer
+            );
+
+
+            // Clear previous dropdown
+
+            studentMaterialSuggestions.innerHTML =
+                "";
+
+            studentMaterialSuggestions.style.display =
+                "none";
+
+
+            // If search is empty,
+            // show ALL materials again
+
+            if (!searchText) {
+
+                loadStudentMaterials();
+
+                return;
+
+            }
+
+
+            // Wait a little before searching
+
+            studentSearchTimer =
+                setTimeout(
+                    function () {
+
+                        loadStudentSearchResults(
+                            searchText
+                        );
+
+                    },
+                    200
+                );
+
+        }
+    );
+
+
+    // --------------------------------------------------------
+    // CLOSE DROPDOWN WHEN CLICKING OUTSIDE
+    // --------------------------------------------------------
+
+    document.addEventListener(
+        "click",
+        function (event) {
+
+            if (
+                !studentMaterialSearch.contains(
+                    event.target
+                ) &&
+                !studentMaterialSuggestions.contains(
+                    event.target
+                )
+            ) {
+
+                studentMaterialSuggestions.style.display =
+                    "none";
+
+            }
+
+        }
+    );
+
+}
+
+
+// ============================================================
+// LOAD SEARCH DATA
+// ============================================================
+
+async function loadStudentSearchResults(
+    searchText
+) {
+
+    if (
+        !studentMaterialSuggestions
+    ) {
+        return;
+    }
+
+
+    const search =
+        String(searchText || "")
+            .trim()
+            .toLowerCase();
+
+
+    if (!search) {
+        return;
+    }
+
+
+    try {
+
+        // ====================================================
+        // LOAD MATERIALS
+        // ====================================================
+
+        const materialsResponse =
+            await fetch(
+                "/materials"
+            );
+
+
+        const materialsData =
+            await materialsResponse.json();
+
+
+        if (
+            materialsResponse.ok &&
+            materialsData.status === "success"
+        ) {
+
+            studentSearchMaterials =
+                materialsData.materials || [];
+
+        }
+        else {
+
+            studentSearchMaterials = [];
+
+        }
+
+
+        // ====================================================
+        // LOAD SUBJECTS
+        // ====================================================
+
+        const subjectsResponse =
+            await fetch(
+                "/subjects?search=" +
+                encodeURIComponent(searchText)
+            );
+
+
+        const subjectsData =
+            await subjectsResponse.json();
+
+
+        const subjects =
+            (
+                subjectsResponse.ok &&
+                subjectsData.status === "success"
+            )
+                ? subjectsData.subjects || []
+                : [];
+
+
+        // ====================================================
+        // LOAD TEACHERS
+        // ====================================================
+
+        const teachersResponse =
+            await fetch(
+                "/teachers"
+            );
+
+
+        const teachersData =
+            await teachersResponse.json();
+
+
+        if (
+            teachersResponse.ok &&
+            teachersData.status === "success"
+        ) {
+
+            studentSearchTeachers =
+                teachersData.teachers || [];
+
+        }
+        else {
+
+            studentSearchTeachers = [];
+
+        }
+
+
+        // ====================================================
+        // FIND MATCHING MATERIALS
+        // ====================================================
+
+        const matchingMaterials =
+            studentSearchMaterials.filter(
+                function (material) {
+
+                    const title =
+                        String(
+                            material.title ||
+                            material.file_name ||
+                            ""
+                        )
+                            .toLowerCase();
+
+
+                    const subject =
+                        String(
+                            material.subject ||
+                            ""
+                        )
+                            .toLowerCase();
+
+
+                    const uploader =
+                        String(
+                            material.uploader_name ||
+                            ""
+                        )
+                            .toLowerCase();
+
+
+                    return (
+                        title.includes(search) ||
+                        subject.includes(search) ||
+                        uploader.includes(search)
+                    );
+
+                }
+            );
+
+
+        // ====================================================
+        // FIND MATCHING TEACHERS
+        // ====================================================
+
+        const matchingTeachers =
+            studentSearchTeachers.filter(
+                function (teacher) {
+
+                    const name =
+                        String(
+                            teacher.name || ""
+                        )
+                            .toLowerCase();
+
+
+                    const department =
+                        String(
+                            teacher.department || ""
+                        )
+                            .toLowerCase();
+
+
+                    const subject =
+                        String(
+                            teacher.subject || ""
+                        )
+                            .toLowerCase();
+
+
+                    const designation =
+                        String(
+                            teacher.designation || ""
+                        )
+                            .toLowerCase();
+
+
+                    return (
+                        name.includes(search) ||
+                        department.includes(search) ||
+                        subject.includes(search) ||
+                        designation.includes(search)
+                    );
+
+                }
+            );
+
+
+        // ====================================================
+        // CLEAR DROPDOWN
+        // ====================================================
+
+        studentMaterialSuggestions.innerHTML =
+            "";
+
+
+        let resultCount = 0;
+
+
+        // ====================================================
+        // MATERIAL RESULTS
+        // ====================================================
+
+        if (
+            matchingMaterials.length > 0
+        ) {
+
+            const heading =
+                document.createElement(
+                    "div"
+                );
+
+
+            heading.className =
+                "subject-no-results";
+
+
+            heading.textContent =
+                "📄 Materials";
+
+
+            studentMaterialSuggestions.appendChild(
+                heading
+            );
+
+
+            matchingMaterials
+                .slice(0, 8)
+                .forEach(
+                    function (material) {
+
+                        const suggestion =
+                            document.createElement(
+                                "div"
+                            );
+
+
+                        suggestion.className =
+                            "subject-suggestion-item";
+
+
+                        const materialTitle =
+                            material.title ||
+                            material.file_name ||
+                            "Untitled Material";
+
+
+                        suggestion.innerHTML = `
+
+                            <strong>
+                                📄 ${escapeHtml(
+                                    materialTitle
+                                )}
+                            </strong>
+
+                            <div
+                                style="
+                                    font-size:12px;
+                                    color:#64748b;
+                                    margin-top:4px;
+                                "
+                            >
+                                ${escapeHtml(
+                                    material.subject ||
+                                    "General"
+                                )}
+                                •
+                                ${escapeHtml(
+                                    material.uploader_name ||
+                                    "College Staff"
+                                )}
+                            </div>
+
+                        `;
+
+
+                        suggestion.addEventListener(
+                            "click",
+                            function (event) {
+
+                                event.stopPropagation();
+
+
+                                studentMaterialSearch.value =
+                                    materialTitle;
+
+
+                                studentMaterialSuggestions.innerHTML =
+                                    "";
+
+                                studentMaterialSuggestions.style.display =
+                                    "none";
+
+
+                                filterStudentMaterialsById(
+                                    material.material_id
+                                );
+
+                            }
+                        );
+
+
+                        studentMaterialSuggestions.appendChild(
+                            suggestion
+                        );
+
+
+                        resultCount++;
+
+                    }
+                );
+
+        }
+
+
+        // ====================================================
+        // SUBJECT RESULTS
+        // ====================================================
+
+        if (
+            subjects.length > 0
+        ) {
+
+            const heading =
+                document.createElement(
+                    "div"
+                );
+
+
+            heading.className =
+                "subject-no-results";
+
+
+            heading.textContent =
+                "📚 Subjects";
+
+
+            studentMaterialSuggestions.appendChild(
+                heading
+            );
+
+
+            subjects
+                .slice(0, 8)
+                .forEach(
+                    function (subject) {
+
+                        const subjectName =
+                            subject.subject_name;
+
+
+                        if (!subjectName) {
+                            return;
+                        }
+
+
+                        const suggestion =
+                            document.createElement(
+                                "div"
+                            );
+
+
+                        suggestion.className =
+                            "subject-suggestion-item";
+
+
+                        suggestion.innerHTML = `
+
+                            <strong>
+                                📚 ${escapeHtml(
+                                    subjectName
+                                )}
+                            </strong>
+
+                        `;
+
+
+                        suggestion.addEventListener(
+                            "click",
+                            function (event) {
+
+                                event.stopPropagation();
+
+
+                                studentMaterialSearch.value =
+                                    subjectName;
+
+
+                                studentMaterialSuggestions.innerHTML =
+                                    "";
+
+                                studentMaterialSuggestions.style.display =
+                                    "none";
+
+
+                                filterStudentMaterials(
+                                    subjectName
+                                );
+
+                            }
+                        );
+
+
+                        studentMaterialSuggestions.appendChild(
+                            suggestion
+                        );
+
+
+                        resultCount++;
+
+                    }
+                );
+
+        }
+
+
+        // ====================================================
+        // TEACHER RESULTS
+        // ====================================================
+
+        if (
+            matchingTeachers.length > 0
+        ) {
+
+            const heading =
+                document.createElement(
+                    "div"
+                );
+
+
+            heading.className =
+                "subject-no-results";
+
+
+            heading.textContent =
+                "👨‍🏫 Teachers";
+
+
+            studentMaterialSuggestions.appendChild(
+                heading
+            );
+
+
+            matchingTeachers
+                .slice(0, 8)
+                .forEach(
+                    function (teacher) {
+
+                        const suggestion =
+                            document.createElement(
+                                "div"
+                            );
+
+
+                        suggestion.className =
+                            "subject-suggestion-item";
+
+
+                        // Count all materials
+                        // uploaded by this teacher
+
+                        const teacherMaterialCount =
+                            studentSearchMaterials.filter(
+                                function (material) {
+
+                                    return (
+                                        String(
+                                            material.uploader_id ||
+                                            ""
+                                        ) ===
+                                        String(
+                                            teacher.user_id ||
+                                            ""
+                                        )
+                                    );
+
+                                }
+                            ).length;
+
+
+                        suggestion.innerHTML = `
+
+                            <strong>
+                                👨‍🏫 ${escapeHtml(
+                                    teacher.name ||
+                                    "Unknown Teacher"
+                                )}
+                            </strong>
+
+                            <div
+                                style="
+                                    font-size:12px;
+                                    color:#64748b;
+                                    margin-top:4px;
+                                "
+                            >
+                                ${escapeHtml(
+                                    teacher.department ||
+                                    "Department not specified"
+                                )}
+                                •
+                                ${teacherMaterialCount}
+                                ${
+                                    teacherMaterialCount === 1
+                                        ? " Material"
+                                        : " Materials"
+                                }
+                            </div>
+
+                        `;
+
+
+                        suggestion.addEventListener(
+                            "click",
+                            function (event) {
+
+                                event.stopPropagation();
+
+
+                                studentMaterialSearch.value =
+                                    teacher.name;
+
+
+                                studentMaterialSuggestions.innerHTML =
+                                    "";
+
+                                studentMaterialSuggestions.style.display =
+                                    "none";
+
+
+                                filterStudentMaterialsByTeacher(
+                                    teacher.user_id
+                                );
+
+                            }
+                        );
+
+
+                        studentMaterialSuggestions.appendChild(
+                            suggestion
+                        );
+
+
+                        resultCount++;
+
+                    }
+                );
+
+        }
+
+
+        // ====================================================
+        // NOTHING FOUND
+        // ====================================================
+
+        if (
+            resultCount === 0
+        ) {
+
+            studentMaterialSuggestions.innerHTML = `
+
+                <div class="subject-no-results">
+
+                    No matching materials,
+                    subjects or teachers found
+
+                </div>
+
+            `;
+
+        }
+
+
+        // ====================================================
+        // SHOW DROPDOWN
+        // ====================================================
+
+        studentMaterialSuggestions.style.display =
+            "block";
+
+    }
+    catch (error) {
+
+        console.error(
+            "Student search error:",
+            error
+        );
+
+    }
+
+}
+
+
+// ============================================================
+// FILTER BY ONE PARTICULAR MATERIAL
+// ============================================================
+
+function filterStudentMaterialsById(
+    materialId
+) {
+
+    const teacherCards =
+        document.querySelectorAll(
+            "#realStudentMaterials .teacher-material-card"
+        );
+
+
+    teacherCards.forEach(
+        function (teacherCard) {
+
+            const fileCards =
+                teacherCard.querySelectorAll(
+                    ".file-card"
+                );
+
+
+            let visibleCount = 0;
+
+
+            fileCards.forEach(
+                function (fileCard) {
+
+                    const cardMaterialId =
+                        fileCard.getAttribute(
+                            "data-material-id"
+                        );
+
+
+                    if (
+                        String(cardMaterialId) ===
+                        String(materialId)
+                    ) {
+
+                        fileCard.style.display =
+                            "";
+
+                        visibleCount++;
+
+                    }
+                    else {
+
+                        fileCard.style.display =
+                            "none";
+
+                    }
+
+                }
+            );
+
+
+            const materialCount =
+                teacherCard.querySelector(
+                    ".material-count"
+                );
+
+
+            if (materialCount) {
+
+                materialCount.textContent =
+                    visibleCount +
+                    (
+                        visibleCount === 1
+                            ? " Material"
+                            : " Materials"
+                    );
+
+            }
+
+
+            if (
+                visibleCount === 0
+            ) {
+
+                teacherCard.style.display =
+                    "none";
+
+            }
+            else {
+
+                teacherCard.style.display =
+                    "";
+
+            }
+
+        }
+    );
+
+}
+
+
+// ============================================================
+// FILTER BY TEACHER
+// ============================================================
+
+function filterStudentMaterialsByTeacher(
+    teacherId
+) {
+
+    const teacherCards =
+        document.querySelectorAll(
+            "#realStudentMaterials .teacher-material-card"
+        );
+
+
+    teacherCards.forEach(
+        function (teacherCard) {
+
+            const uploaderId =
+                teacherCard.getAttribute(
+                    "data-uploader-id"
+                );
+
+
+            if (
+                String(uploaderId) ===
+                String(teacherId)
+            ) {
+
+                teacherCard.style.display =
+                    "";
+
+
+                const fileCards =
+                    teacherCard.querySelectorAll(
+                        ".file-card"
+                    );
+
+
+                fileCards.forEach(
+                    function (fileCard) {
+
+                        fileCard.style.display =
+                            "";
+
+                    }
+                );
+
+
+                const materialCount =
+                    teacherCard.querySelector(
+                        ".material-count"
+                    );
+
+
+                if (materialCount) {
+
+                    materialCount.textContent =
+                        fileCards.length +
+                        (
+                            fileCards.length === 1
+                                ? " Material"
+                                : " Materials"
+                        );
+
+                }
+
+            }
+            else {
+
+                teacherCard.style.display =
+                    "none";
+
+            }
+
+        }
+    );
+
+}
+
+
+// ============================================================
+// FILTER BY SUBJECT
+// ============================================================
+
+function filterStudentMaterials(
+    selectedSubject
+) {
+
+    const teacherCards =
+        document.querySelectorAll(
+            "#realStudentMaterials .teacher-material-card"
+        );
+
+
+    const searchText =
+        String(
+            selectedSubject || ""
+        )
+            .trim()
+            .toLowerCase();
+
+
+    teacherCards.forEach(
+        function (teacherCard) {
+
+            const fileCards =
+                teacherCard.querySelectorAll(
+                    ".file-card"
+                );
+
+
+            let visibleFileCount = 0;
+
+
+            fileCards.forEach(
+                function (fileCard) {
+
+                    const subjectElement =
+                        fileCard.querySelector(
+                            "p"
+                        );
+
+
+                    const fileSubject =
+                        subjectElement
+                            ? subjectElement.textContent
+                                .trim()
+                                .toLowerCase()
+                            : "";
+
+
+                    if (
+                        fileSubject ===
+                        searchText
+                    ) {
+
+                        fileCard.style.display =
+                            "";
+
+                        visibleFileCount++;
+
+                    }
+                    else {
+
+                        fileCard.style.display =
+                            "none";
+
+                    }
+
+                }
+            );
+
+
+            const materialCount =
+                teacherCard.querySelector(
+                    ".material-count"
+                );
+
+
+            if (materialCount) {
+
+                materialCount.textContent =
+                    visibleFileCount +
+                    (
+                        visibleFileCount === 1
+                            ? " Material"
+                            : " Materials"
+                    );
+
+            }
+
+
+            if (
+                visibleFileCount === 0
+            ) {
+
+                teacherCard.style.display =
+                    "none";
+
+            }
+            else {
+
+                teacherCard.style.display =
+                    "";
+
+            }
+
+        }
+    );
+
+}

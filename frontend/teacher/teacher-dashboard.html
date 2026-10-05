@@ -791,19 +791,40 @@
 
                <div class="section-card profile-card">
 
-   <div class="profile-large-avatar" id="profileLargeAvatar">
+        <div class="profile-large-avatar" id="profileLargeAvatar">
 
-    <img
-        id="profileTeacherPhoto"
-        src=""
-        alt="Teacher Profile"
-    >
+            <img
+                id="profileTeacherPhoto"
+                src=""
+                alt="Teacher Profile"
+            >
 
-    <span id="profileAvatarInitials">
-        T
-    </span>
+            <span id="profileAvatarInitials">
+                T
+            </span>
 
-</div>
+        </div>
+
+        <div class="profile-photo-actions">
+            <input
+                type="file"
+                id="profilePhotoInput"
+                accept=".jpg,.jpeg,.png,.webp"
+                hidden
+            >
+
+            <button
+                type="button"
+                id="changeProfilePhotoBtn"
+                class="profile-photo-btn"
+            >
+                📷 Change Profile Photo
+            </button>
+
+            <p class="profile-photo-hint">
+                JPG, PNG or WEBP • Maximum 2 MB
+            </p>
+        </div>
 
     <h2 id="profileTeacherName">
         Loading...

@@ -1600,3 +1600,106 @@ th {
     letter-spacing: 0.3px;
      color: #ffffff;
 }
+
+/* ============================================================
+   STUDENT SUBJECT SEARCH DROPDOWN
+   ============================================================ */
+
+.subject-search-box {
+    position: relative;
+}
+
+
+/* Dropdown container */
+
+#studentSubjectSuggestions {
+    position: absolute;
+
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+
+    background: #ffffff;
+
+    border: 1px solid #dbe2ea;
+    border-radius: 10px;
+
+    box-shadow:
+        0 10px 25px rgba(15, 23, 42, 0.12);
+
+    max-height: 260px;
+
+    overflow-y: auto;
+
+    display: none;
+
+    z-index: 1000;
+
+    padding: 6px 0;
+}
+
+
+/* Individual subject */
+
+#studentSubjectSuggestions
+.subject-suggestion-item {
+
+    padding: 12px 16px;
+
+    font-size: 14px;
+
+    color: #1e293b;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
+}
+
+
+/* Hover */
+
+#studentSubjectSuggestions
+.subject-suggestion-item:hover {
+
+    background: #f1f5f9;
+
+    color: #4f46e5;
+}
+
+
+/* No results */
+
+#studentSubjectSuggestions
+.subject-no-results {
+
+    padding: 12px 16px;
+
+    font-size: 14px;
+
+    color: #64748b;
+
+    text-align: center;
+
+}
+
+
+/* Scrollbar */
+
+#studentSubjectSuggestions::-webkit-scrollbar {
+    width: 6px;
+}
+
+#studentSubjectSuggestions::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#studentSubjectSuggestions::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+
+#studentSubjectSuggestions::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}

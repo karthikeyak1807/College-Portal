@@ -1,0 +1,11 @@
+.git
+.vscode
+venv
+backend/venv
+__pycache__
+**/__pycache__
+*.py[cod]
+.env
+.env.*
+uploads
+**/uploads

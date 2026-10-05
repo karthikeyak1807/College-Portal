@@ -704,52 +704,159 @@ footer {
     opacity: 0.85;
 }
 
+
 /* =========================================
    LIVE COLLEGE STATISTICS
    ========================================= */
 
 .portal-stats {
     width: 100%;
+    max-width: 900px;
+    margin: 28px auto 35px;
+
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+
+/* Individual statistic card */
+
+.stat-card {
     display: flex;
-    justify-content: center;
     align-items: center;
-    gap: 14px;
-    margin: 18px 0 24px;
-    font-size: 14px;
-    color: rgba(255, 255, 255, 0.9);
-    flex-wrap: wrap;
+    gap: 12px;
+
+    padding: 16px 18px;
+
+    /* Glass effect that lets the college background show through */
+    background: rgba(255, 255, 255, 0.10);
+
+    border: 1px solid rgba(255, 255, 255, 0.28);
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 8px 22px rgba(0, 0, 0, 0.12);
+
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        background 0.25s ease;
 }
 
-.portal-stats span {
-    white-space: nowrap;
-}
 
-.portal-stats strong {
-    font-size: 16px;
-    font-weight: 700;
-}
+/* Hover effect */
 
-.stats-divider {
-    opacity: 0.5;
+.stat-card:hover {
+    transform: translateY(-4px);
+
+    box-shadow:
+        0 12px 28px rgba(15, 23, 42, 0.15);
 }
 
 
-/* Mobile */
+/* Icon */
 
-@media (max-width: 600px) {
+.stat-icon {
+    width: 42px;
+    height: 42px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    font-size: 21px;
+}
+
+
+/* Different icon backgrounds */
+.teacher-stat-icon {
+    background: rgba(99, 102, 241, 0.35);
+}
+
+.student-stat-icon {
+    background: rgba(16, 185, 129, 0.35);
+}
+
+.material-stat-icon {
+    background: rgba(245, 158, 11, 0.35);
+}
+
+.storage-stat-icon {
+    background: rgba(59, 130, 246, 0.35);
+}
+
+
+/* Number + label */
+
+.stat-content {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+
+
+/* =========================================
+   RESPONSIVE DESIGN
+   ========================================= */
+
+@media (max-width: 800px) {
 
     .portal-stats {
-        gap: 8px;
-        margin: 15px 10px 20px;
-        font-size: 12px;
-    }
-
-    .portal-stats strong {
-        font-size: 14px;
-    }
-
-    .stats-divider {
-        display: none;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
     }
 
 }
+
+
+@media (max-width: 480px) {
+
+    .portal-stats {
+        grid-template-columns: 1fr;
+        gap: 12px;
+
+        margin-top: 22px;
+        margin-bottom: 28px;
+    }
+
+    .stat-card {
+        padding: 14px 16px;
+    }
+
+}
+
+/* =========================================
+   STATISTICS TEXT VISIBILITY
+   ========================================= */
+
+.stat-content strong {
+    color: #ffffff;
+
+    font-size: 20px;
+    font-weight: 800;
+
+    text-shadow:
+        0 2px 5px rgba(0, 0, 0, 0.55);
+}
+
+.stat-content span {
+    color: #ffffff;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    text-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.55);
+}
+
+

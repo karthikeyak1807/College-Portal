@@ -76,6 +76,13 @@
                 Teachers
             </button>
             <button
+            class="nav-item"
+            data-section="hodManagement"
+        >
+            <span>👔</span>
+            HOD Management
+        </button>
+            <button
     class="nav-item"
     data-section="studentRequests"
 >
@@ -146,7 +153,7 @@
 
                 <div>
 
-                    <strong>
+                     <strong id="adminHeaderName"></strong>
                         HOD Admin
                     </strong>
 
@@ -177,7 +184,7 @@
                     </span>
 
                     <h2>
-                        Welcome, HOD! 👋
+                        Welcome, <span id="welcomeHodName">HOD</span>! 👋
                     </h2>
 
                     <p>
@@ -932,92 +939,6 @@
 
                     </div>
 
-
-                    <!-- PASSWORD -->
-
-                    <div class="form-group">
-
-                        <label for="teacherPassword">
-                            Password
-                        </label>
-
-                        <input
-                            type="password"
-                            id="teacherPassword"
-                            placeholder="Create login password"
-                            required
-                        >
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label for="teacherConfirmPassword">
-                            Confirm Password
-                        </label>
-
-                        <input
-                            type="password"
-                            id="teacherConfirmPassword"
-                            placeholder="Confirm password"
-                            required
-                        >
-
-                    </div>
-
-                </div>
-
-
-                <!-- PROFILE PHOTO -->
-
-                <div class="form-group">
-
-                    <label>
-                        Profile Photo
-                    </label>
-
-
-                    <div
-                        class="teacher-photo-upload"
-                        id="teacherPhotoUpload"
-                    >
-
-                        <div class="teacher-photo-icon">
-                            📷
-                        </div>
-
-                        <h3>
-                            Upload Teacher Photo
-                        </h3>
-
-                        <p>
-                            Click to choose a profile photo
-                        </p>
-
-                        <span>
-                            JPG, JPEG or PNG
-                        </span>
-
-
-                        <input
-                            type="file"
-                            id="teacherPhoto"
-                            accept=".jpg,.jpeg,.png"
-                            hidden
-                        >
-
-                    </div>
-
-
-                    <div
-                        class="teacher-photo-name"
-                        id="teacherPhotoName"
-                    ></div>
-
-                </div>
-
-
                 <!-- FORM ACTIONS -->
 
                 <div class="upload-actions">
@@ -1099,6 +1020,219 @@
     </div>
 
 </div>
+    </div>
+
+</section>
+
+<!-- ================= HOD MANAGEMENT ================= -->
+
+<section
+    class="content-section"
+    id="hodManagement"
+>
+
+    <div class="section-card">
+
+        <div class="section-heading">
+
+            <div>
+
+                <h2>
+                    HOD Management
+                </h2>
+
+                <p>
+                    Create and manage HOD accounts for the college portal.
+                </p>
+
+            </div>
+
+            <button
+                class="primary-btn"
+                id="showCreateHodBtn"
+                type="button"
+            >
+                👔 Create HOD Account
+            </button>
+
+        </div>
+
+
+        <!-- CREATE HOD FORM -->
+
+        <div
+            id="createHodFormContainer"
+            class="teacher-form-container"
+        >
+
+            <div class="teacher-form-header">
+
+                <div>
+
+                    <h3>
+                        Create New HOD Account
+                    </h3>
+
+                    <p>
+                        Enter the new HOD's details.
+                        A password setup invitation will be sent by email.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <form id="createHodForm">
+
+                <div class="form-grid">
+
+                    <!-- HOD ID -->
+
+                    <div class="form-group">
+
+                        <label for="hodId">
+                            HOD ID
+                        </label>
+
+                        <input
+                            type="text"
+                            id="hodId"
+                            placeholder="Example: HOD02"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- FULL NAME -->
+
+                    <div class="form-group">
+
+                        <label for="hodName">
+                            Full Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="hodName"
+                            placeholder="Example: Dr. Ramesh Kumar"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- EMAIL -->
+
+                    <div class="form-group">
+
+                        <label for="hodEmail">
+                            Email ID
+                        </label>
+
+                        <input
+                            type="email"
+                            id="hodEmail"
+                            placeholder="hod@college.edu"
+                            required
+                        >
+
+                    </div>
+                    <div class="form-group">
+                    <label for="hodDepartment">Department</label>
+                    <input
+                        type="text"
+                        id="hodDepartment"
+                        placeholder="Enter department"
+                        required
+                    >
+                </div>
+
+                </div>
+
+
+                <div class="upload-actions">
+
+                    <button
+                        type="reset"
+                        class="secondary-btn"
+                        id="cancelHodBtn"
+                    >
+                        Cancel
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        class="primary-btn"
+                    >
+                        ✅ Create HOD Account
+                    </button>
+
+                </div>
+
+
+                <p
+                    id="hodFormMessage"
+                    class="teacher-form-message"
+                ></p>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- REGISTERED HODS -->
+
+    <div class="section-card">
+
+        <div class="section-heading">
+
+            <div>
+
+                <h2>
+                    Registered HODs
+                </h2>
+
+                <p>
+                    HOD accounts currently registered in the college portal.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div
+            class="teacher-grid"
+            id="hodGrid"
+        >
+
+            <div class="teacher-card">
+
+                <div class="teacher-card-avatar">
+                    👔
+                </div>
+
+                <h3>
+                    Loading HODs...
+                </h3>
+
+                <p>
+                    Please wait
+                </p>
+
+                <span>
+                    Loading registered HOD accounts...
+                </span>
+
+            </div>
+
+        </div>
+
     </div>
 
 </section>
@@ -1346,7 +1480,7 @@
                         AD
                     </div>
 
-                    <h2id="adminProfileName">
+                <h2 id="adminProfileName">
     HOD Admin
  </h2>
 
