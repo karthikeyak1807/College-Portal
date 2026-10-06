@@ -4385,24 +4385,24 @@ if (createSubjectForm) {
 
           const subjectName =
     document
-        .getElementById("subjectNameInput")
+        .getElementById("subjectName")
         .value
         .trim();
 
 const subjectDepartment =
     document
-        .getElementById("subjectDepartmentInput")
+        .getElementById("subjectDepartment")
         .value
         .trim();
 
 const subjectSemester =
     document
-        .getElementById("subjectSemesterInput")
+        .getElementById("subjectSemester")
         .value;
 
 const subjectCourseCode =
     document
-        .getElementById("subjectCodeInput")
+        .getElementById("subjectCode")
         .value
         .trim();
 
