@@ -1,3 +1,8 @@
+const API_BASE_URL =
+    window.location.hostname === "127.0.0.1" ||
+    window.location.hostname === "localhost"
+        ? "http://127.0.0.1:8000"
+        : "";
 document.addEventListener("DOMContentLoaded", () => {
     const userId = sessionStorage.getItem("userId");
     const userName = sessionStorage.getItem("userName");
@@ -143,6 +148,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
             }
 
+            else if (sectionName === "subjectManagement") {
+
+                pageTitle.textContent =
+                    "Subject Management";
+
+                pageSubtitle.textContent =
+                    "Create and manage college subjects";
+
+            }
+
             else if (sectionName === "studentRequests") {
 
     pageTitle.textContent =
@@ -192,7 +207,7 @@ else if (sectionName === "studentAccounts") {
 
             const materialsResponse =
                 await fetch(
-                    "/materials"
+                    `${API_BASE_URL}/materials`
                 );
 
             const materialsData =
@@ -203,7 +218,7 @@ else if (sectionName === "studentAccounts") {
 
             const teachersResponse =
                 await fetch(
-                    "/teachers"
+                    `${API_BASE_URL}/teachers`
                 );
 
             const teachersData =
@@ -214,7 +229,7 @@ else if (sectionName === "studentAccounts") {
 
             const studentsResponse =
                 await fetch(
-                    "/students"
+                    `${API_BASE_URL}/students`
                 );
 
             const studentsData =
@@ -786,7 +801,7 @@ if (uploadForm) {
 
             const response =
                 await fetch(
-                    "/materials"
+                   `${API_BASE_URL}/materials`
                 );
 
 
@@ -1208,7 +1223,7 @@ async function loadRecentMaterials() {
 
         const response =
             await fetch(
-                "/materials"
+                `${API_BASE_URL}/materials`
             );
 
 
@@ -1512,7 +1527,7 @@ document.addEventListener(
         if (action === "view") {
 
             const viewUrl =
-                "/materials/" +
+               `${API_BASE_URL}/materials/`  +
                 encodeURIComponent(materialId) +
                 "/view";
 
@@ -1534,7 +1549,7 @@ document.addEventListener(
         if (action === "download") {
 
             const downloadUrl =
-                "/materials/" +
+                `${API_BASE_URL}/materials/` +
                 encodeURIComponent(materialId) +
                 "/download";
 
@@ -1591,7 +1606,7 @@ document.addEventListener(
 
                 const response =
                     await fetch(
-                        "/materials/" +
+                        `${API_BASE_URL}/materials/` +
                         encodeURIComponent(materialId) +
                         "?uploader_id=" +
                         encodeURIComponent(uploaderId),
@@ -1701,7 +1716,7 @@ async function loadStudentRequests() {
 
         const response =
             await fetch(
-                "/student-requests"
+               `${API_BASE_URL}/student-requests`
             );
 
 
@@ -1860,7 +1875,7 @@ async function approveStudent(studentId) {
 
         const response =
             await fetch(
-                "/students/" +
+               `${API_BASE_URL}/students/`+
                 encodeURIComponent(studentId) +
                 "/approve",
                 {
@@ -1930,7 +1945,7 @@ async function deleteStudentRequest(studentId) {
 
         const response =
             await fetch(
-                "/students/" +
+                `${API_BASE_URL}/students/` +
                 encodeURIComponent(studentId),
                 {
                     method: "DELETE"
@@ -2011,7 +2026,7 @@ async function approveAllStudents() {
 
         const response =
             await fetch(
-                "/students/approve-all",
+                `${API_BASE_URL}/students/approve-all`,
                 {
                     method: "PUT"
                 }
@@ -2161,8 +2176,7 @@ async function viewStudentRequest(studentId) {
 
         const response =
             await fetch(
-                "/students/" +
-                encodeURIComponent(studentId)
+            `${API_BASE_URL}/students/${encodeURIComponent(studentId)}`
             );
 
 
@@ -2280,7 +2294,7 @@ loadStudentRequests();
 
             const response =
                 await fetch(
-                    "/students"
+                    `${API_BASE_URL}/students`
                 );
 
 
@@ -2940,7 +2954,7 @@ if (createTeacherForm) {
 
                 const response =
                     await fetch(
-                        "/teachers",
+                       `${API_BASE_URL}/teachers`,
                         {
                             method: "POST",
                             body: formData
@@ -3072,7 +3086,7 @@ if (createTeacherForm) {
 
             const response =
                 await fetch(
-                    "/teachers"
+                   `${API_BASE_URL}/teachers`
                 );
 
 
@@ -3179,8 +3193,7 @@ if (createTeacherForm) {
                         avatarHTML = `
                             <div class="teacher-card-avatar">
                                 <img
-                                    src="/uploads/${encodeURIComponent(
-                                        teacher.profile_photo
+                                  src="${API_BASE_URL}/uploads/${encodeURIComponent(teacher.profile_photo)}"
                                     )}"
                                     alt="${escapeStudentHtml(name)}"
                                     style="
@@ -3347,7 +3360,7 @@ if (createTeacherForm) {
 
                     const response =
                         await fetch(
-                            "/teachers/" +
+                          `${API_BASE_URL}/teachers/` +
                             encodeURIComponent(teacherId),
                             {
                                 method: "DELETE"
@@ -4297,9 +4310,387 @@ document.addEventListener(
     }
 );
 
+/* ================= SUBJECT MANAGEMENT ================= */
+
+/* ================= SHOW CREATE SUBJECT FORM ================= */
+
+const showCreateSubjectBtn =
+    document.getElementById("showCreateSubjectBtn");
+
+const createSubjectFormContainer =
+    document.getElementById("createSubjectFormContainer");
+
+const cancelSubjectBtn =
+    document.getElementById("cancelSubjectBtn");
+
+
+if (
+    showCreateSubjectBtn &&
+    createSubjectFormContainer
+) {
+
+    showCreateSubjectBtn.addEventListener(
+        "click",
+        function () {
+
+            createSubjectFormContainer.classList.toggle(
+                "show"
+            );
+
+        }
+    );
+
+}
+
+
+if (
+    cancelSubjectBtn &&
+    createSubjectFormContainer
+) {
+
+    cancelSubjectBtn.addEventListener(
+        "click",
+        function () {
+
+            createSubjectFormContainer.classList.remove(
+                "show"
+            );
+
+        }
+    );
+
+}
+
+
+/* ================= CREATE SUBJECT ================= */
+
+const createSubjectForm =
+    document.getElementById(
+        "createSubjectForm"
+    );
+
+const subjectFormMessage =
+    document.getElementById(
+        "subjectFormMessage"
+    );
+
+
+if (createSubjectForm) {
+
+    createSubjectForm.addEventListener(
+        "submit",
+        async function (event) {
+
+            event.preventDefault();
+
+
+            const subjectName =
+                document
+                    .getElementById(
+                        "subjectName"
+                    )
+                    .value
+                    .trim();
+
+
+            const subjectDepartment =
+                document
+                    .getElementById(
+                        "subjectDepartment"
+                    )
+                    .value
+                    .trim();
+
+
+            const subjectSemester =
+                document
+                    .getElementById(
+                        "subjectSemester"
+                    )
+                    .value;
+
+
+            const subjectCourseCode =
+                document
+                    .getElementById(
+                        "subjectCourseCode"
+                    )
+                    .value
+                    .trim();
+
+
+            if (
+                !subjectName ||
+                !subjectDepartment ||
+                !subjectSemester
+            ) {
+
+                subjectFormMessage.textContent =
+                    "Please fill in all required fields.";
+
+                subjectFormMessage.style.color =
+                    "red";
+
+                return;
+
+            }
+
+
+            const formData =
+                new FormData();
+
+
+            formData.append(
+                "subject_name",
+                subjectName
+            );
+
+
+            formData.append(
+                "department",
+                subjectDepartment
+            );
+
+
+            formData.append(
+                "semester",
+                subjectSemester
+            );
+
+
+            formData.append(
+                "course_code",
+                subjectCourseCode
+            );
+
+
+            try {
+
+                subjectFormMessage.textContent =
+                    "Creating subject...";
+
+                subjectFormMessage.style.color =
+                    "";
+
+
+                const response =
+                    await fetch(
+                        "/subjects",
+                        {
+                            method: "POST",
+                            body: formData
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (
+                    !response.ok ||
+                    data.status !== "success"
+                ) {
+
+                    subjectFormMessage.textContent =
+                        data.message ||
+                        "Unable to create subject.";
+
+                    subjectFormMessage.style.color =
+                        "red";
+
+                    return;
+
+                }
+
+
+                subjectFormMessage.textContent =
+                    "Subject created successfully! ✅";
+
+                subjectFormMessage.style.color =
+                    "green";
+
+
+                createSubjectForm.reset();
+
+
+                await loadSubjects();
+
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "Create subject error:",
+                    error
+                );
+
+
+                subjectFormMessage.textContent =
+                    "Unable to connect to the backend.";
+
+                subjectFormMessage.style.color =
+                    "red";
+
+            }
+
+        }
+    );
+
+}
+
+
+/* ================= LOAD SUBJECTS ================= */
+
+async function loadSubjects() {
+
+    const subjectGrid =
+        document.getElementById(
+            "subjectGrid"
+        );
+
+
+    if (!subjectGrid) {
+        return;
+    }
+
+
+    subjectGrid.innerHTML = `
+        <div class="teacher-card">
+            <div class="teacher-card-avatar">📚</div>
+            <h3>Loading Subjects...</h3>
+            <p>Please wait</p>
+            <span>
+                Loading subjects from the database...
+            </span>
+        </div>
+    `;
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_BASE_URL}/subjects`
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            data.status !== "success"
+        ) {
+
+            subjectGrid.innerHTML = `
+                <div class="teacher-card">
+                    <div class="teacher-card-avatar">⚠️</div>
+                    <h3>Unable to Load Subjects</h3>
+                    <p>Please try again.</p>
+                    <span>
+                        ${data.message || "Unknown error"}
+                    </span>
+                </div>
+            `;
+
+            return;
+
+        }
+
+
+        const subjects =
+            data.subjects || [];
+
+
+        if (subjects.length === 0) {
+
+            subjectGrid.innerHTML = `
+                <div class="teacher-card">
+                    <div class="teacher-card-avatar">📚</div>
+                    <h3>No Subjects Created</h3>
+                    <p>Create your first subject.</p>
+                    <span>
+                        Subjects created here will appear for teachers.
+                    </span>
+                </div>
+            `;
+
+            return;
+
+        }
+
+
+        subjectGrid.innerHTML =
+            subjects
+                .map(
+                    function (subject) {
+
+                        return `
+                            <div class="teacher-card">
+
+                                <div class="teacher-card-avatar">
+                                    📚
+                                </div>
+
+                                <h3>
+                                    ${subject.subject_name}
+                                </h3>
+
+                                <p>
+                                    ${subject.department}
+                                    ·
+                                    Semester ${subject.semester}
+                                </p>
+
+                                <span>
+                                    ${
+                                        subject.course_code
+                                            ? "Course Code: " +
+                                              subject.course_code
+                                            : "No course code"
+                                    }
+                                </span>
+
+                            </div>
+                        `;
+
+                    }
+                )
+                .join("");
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Load subjects error:",
+            error
+        );
+
+
+        subjectGrid.innerHTML = `
+            <div class="teacher-card">
+                <div class="teacher-card-avatar">⚠️</div>
+                <h3>Unable to Connect</h3>
+                <p>Please try again.</p>
+                <span>
+                    Unable to connect to the backend.
+                </span>
+            </div>
+        `;
+
+    }
+
+}
+
 
 /* ================= INITIAL LOAD ================= */
 
 loadRegisteredHods();
+
+loadSubjects();
 
 });

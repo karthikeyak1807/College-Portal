@@ -1712,7 +1712,85 @@ def get_student(student_id: str):
         "student": student
     }
 
-    
+# ============================================================
+# SUBJECTS
+# ============================================================
+
+@app.post("/subjects")
+def create_subject(
+    subject_name: str = Form(...),
+    department: str = Form(...),
+    semester: int = Form(...),
+    course_code: str = Form("")
+):
+    try:
+        subject_name = subject_name.strip()
+        department = department.strip()
+        course_code = course_code.strip()
+
+        if not subject_name:
+            return {
+                "status": "error",
+                "message": "Subject name is required."
+            }
+
+        if not department:
+            return {
+                "status": "error",
+                "message": "Department is required."
+            }
+
+        if semester < 1 or semester > 8:
+            return {
+                "status": "error",
+                "message": "Semester must be between 1 and 8."
+            }
+
+        # Check whether the subject already exists
+        existing_subject = subjects_collection.find_one({
+            "subject_name": {
+                "$regex": f"^{re.escape(subject_name)}$",
+                "$options": "i"
+            },
+            "department": department,
+            "semester": semester
+        })
+
+        if existing_subject:
+            return {
+                "status": "error",
+                "message": "This subject already exists for the selected department and semester."
+            }
+
+        subject_data = {
+            "subject_name": subject_name,
+            "department": department,
+            "semester": semester,
+            "course_code": course_code,
+            "created_at": datetime.utcnow()
+        }
+
+        result = subjects_collection.insert_one(subject_data)
+
+        return {
+            "status": "success",
+            "message": "Subject created successfully.",
+            "subject": {
+                "subject_id": str(result.inserted_id),
+                "subject_name": subject_name,
+                "department": department,
+                "semester": semester,
+                "course_code": course_code
+            }
+        }
+
+    except Exception as error:
+        print("Subject creation error:", error)
+
+        return {
+            "status": "error",
+            "message": "Unable to create subject."
+        }
 
 
 # ============================================================

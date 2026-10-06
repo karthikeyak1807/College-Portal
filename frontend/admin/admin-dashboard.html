@@ -82,6 +82,10 @@
             <span>👔</span>
             HOD Management
         </button>
+
+        <button class="nav-item" data-section="subjectManagement">
+            📚 Subject Management
+        </button>
             <button
     class="nav-item"
     data-section="studentRequests"
@@ -1227,6 +1231,265 @@
 
                 <span>
                     Loading registered HOD accounts...
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+<!-- ================= SUBJECT MANAGEMENT ================= -->
+
+<section
+    class="content-section"
+    id="subjectManagement"
+>
+
+    <div class="section-card">
+
+        <div class="section-heading">
+
+            <div>
+
+                <h2>
+                    📚 Subject Management
+                </h2>
+
+                <p>
+                    Create and manage subjects available for teachers and students.
+                </p>
+
+            </div>
+
+            <button
+                class="primary-btn"
+                id="showCreateSubjectBtn"
+                type="button"
+            >
+                ➕ Create Subject
+            </button>
+
+        </div>
+
+
+        <!-- CREATE SUBJECT FORM -->
+
+        <div
+            id="createSubjectFormContainer"
+            class="teacher-form-container"
+        >
+
+            <div class="teacher-form-header">
+
+                <div>
+
+                    <h3>
+                        Create New Subject
+                    </h3>
+
+                    <p>
+                        Add a subject to the college portal.
+                        Teachers will automatically see it in the upload form.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <form id="createSubjectForm">
+
+                <div class="form-grid">
+
+                    <!-- SUBJECT NAME -->
+
+                    <div class="form-group">
+
+                        <label for="subjectName">
+                            Subject Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="subjectName"
+                            placeholder="Example: Data Structures"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- DEPARTMENT -->
+
+                    <div class="form-group">
+
+                        <label for="subjectDepartment">
+                            Department
+                        </label>
+
+                        <input
+                            type="text"
+                            id="subjectDepartment"
+                            placeholder="Example: CSE"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- SEMESTER -->
+
+                    <div class="form-group">
+
+                        <label for="subjectSemester">
+                            Semester
+                        </label>
+
+                        <select
+                            id="subjectSemester"
+                            required
+                        >
+
+                            <option value="">
+                                Select Semester
+                            </option>
+
+                            <option value="1">
+                                1st Semester
+                            </option>
+
+                            <option value="2">
+                                2nd Semester
+                            </option>
+
+                            <option value="3">
+                                3rd Semester
+                            </option>
+
+                            <option value="4">
+                                4th Semester
+                            </option>
+
+                            <option value="5">
+                                5th Semester
+                            </option>
+
+                            <option value="6">
+                                6th Semester
+                            </option>
+
+                            <option value="7">
+                                7th Semester
+                            </option>
+
+                            <option value="8">
+                                8th Semester
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- COURSE CODE -->
+
+                    <div class="form-group">
+
+                        <label for="subjectCourseCode">
+                            Course Code
+                            <span style="opacity: 0.6;">
+                                (Optional)
+                            </span>
+                        </label>
+
+                        <input
+                            type="text"
+                            id="subjectCourseCode"
+                            placeholder="Example: CS301"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="upload-actions">
+
+                    <button
+                        type="reset"
+                        class="secondary-btn"
+                        id="cancelSubjectBtn"
+                    >
+                        Cancel
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        class="primary-btn"
+                    >
+                        ✅ Create Subject
+                    </button>
+
+                </div>
+
+
+                <p
+                    id="subjectFormMessage"
+                    class="teacher-form-message"
+                ></p>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- CREATED SUBJECTS -->
+
+    <div class="section-card">
+
+        <div class="section-heading">
+
+            <div>
+
+                <h2>
+                    📖 Created Subjects
+                </h2>
+
+                <p>
+                    Subjects currently available in the college portal.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div
+            class="teacher-grid"
+            id="subjectGrid"
+        >
+
+            <div class="teacher-card">
+
+                <div class="teacher-card-avatar">
+                    📚
+                </div>
+
+                <h3>
+                    Loading Subjects...
+                </h3>
+
+                <p>
+                    Please wait
+                </p>
+
+                <span>
+                    Loading subjects from the database...
                 </span>
 
             </div>
