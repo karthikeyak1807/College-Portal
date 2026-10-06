@@ -2487,8 +2487,7 @@ loadStudentRequests();
 
             const response =
                 await fetch(
-                    "/students/" +
-                    encodeURIComponent(studentId)
+                    `${API_BASE_URL}/students/${encodeURIComponent(studentId)}`
                 );
 
 
@@ -3194,7 +3193,7 @@ if (createTeacherForm) {
                             <div class="teacher-card-avatar">
                                 <img
                                   src="${API_BASE_URL}/uploads/${encodeURIComponent(teacher.profile_photo)}"
-                                    )}"
+                                
                                     alt="${escapeStudentHtml(name)}"
                                     style="
                                         width:100%;
@@ -3541,7 +3540,7 @@ async function searchSubjects(searchText) {
 
         const response =
             await fetch(
-                "/subjects?search=" +
+                `${API_BASE_URL}/subjects?search=` +
                 encodeURIComponent(searchText)
             );
 
@@ -4384,40 +4383,28 @@ if (createSubjectForm) {
             event.preventDefault();
 
 
-            const subjectName =
-                document
-                    .getElementById(
-                        "subjectName"
-                    )
-                    .value
-                    .trim();
+          const subjectName =
+    document
+        .getElementById("subjectNameInput")
+        .value
+        .trim();
 
+const subjectDepartment =
+    document
+        .getElementById("subjectDepartmentInput")
+        .value
+        .trim();
 
-            const subjectDepartment =
-                document
-                    .getElementById(
-                        "subjectDepartment"
-                    )
-                    .value
-                    .trim();
+const subjectSemester =
+    document
+        .getElementById("subjectSemesterInput")
+        .value;
 
-
-            const subjectSemester =
-                document
-                    .getElementById(
-                        "subjectSemester"
-                    )
-                    .value;
-
-
-            const subjectCourseCode =
-                document
-                    .getElementById(
-                        "subjectCourseCode"
-                    )
-                    .value
-                    .trim();
-
+const subjectCourseCode =
+    document
+        .getElementById("subjectCodeInput")
+        .value
+        .trim();
 
             if (
                 !subjectName ||
@@ -4475,7 +4462,7 @@ if (createSubjectForm) {
 
                 const response =
                     await fetch(
-                        "/subjects",
+                       `${API_BASE_URL}/subjects`,
                         {
                             method: "POST",
                             body: formData
