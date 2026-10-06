@@ -3,6 +3,15 @@ const API_BASE_URL =
     window.location.hostname === "localhost"
         ? "http://127.0.0.1:8000"
         : "";
+
+function escapeStudentHtml(value) {
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
 document.addEventListener("DOMContentLoaded", () => {
     const userId = sessionStorage.getItem("userId");
     const userName = sessionStorage.getItem("userName");
@@ -20,11 +29,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (userName) {
         if (profileName) {
-            profileName.textContent = userName;
+            profileName.textContent = escapeStudentHtml(userName);
         }
 
         if (profileNameDetails) {
-            profileNameDetails.textContent = userName;
+            profileNameDetails.textContent = escapeStudentHtml(userName);
         }
             if (headerName) {
         headerName.textContent = userName;
@@ -4309,114 +4318,110 @@ document.addEventListener(
     }
 );
 
-/* ================= SUBJECT MANAGEMENT ================= */
+loadRegisteredHods();
+});
 
-/* ================= SHOW CREATE SUBJECT FORM ================= */
+/* ============================================================
+   SUBJECT MANAGEMENT
+   ============================================================ */
 
-const showCreateSubjectBtn =
-    document.getElementById("showCreateSubjectBtn");
+document.addEventListener("DOMContentLoaded", function () {
 
-const createSubjectFormContainer =
-    document.getElementById("createSubjectFormContainer");
+    const showBtn =
+        document.getElementById("showCreateSubjectBtn");
 
-const cancelSubjectBtn =
-    document.getElementById("cancelSubjectBtn");
+    const formBox =
+        document.getElementById("createSubjectFormContainer");
 
+    const form =
+        document.getElementById("createSubjectForm");
 
-if (
-    showCreateSubjectBtn &&
-    createSubjectFormContainer
-) {
+    const cancelBtn =
+        document.getElementById("cancelSubjectBtn");
 
-    showCreateSubjectBtn.addEventListener(
-        "click",
-        function () {
+    const message =
+        document.getElementById("subjectFormMessage");
 
-            createSubjectFormContainer.classList.toggle(
-                "show"
-            );
-
-        }
-    );
-
-}
+    const subjectGrid =
+        document.getElementById("subjectGrid");
 
 
-if (
-    cancelSubjectBtn &&
-    createSubjectFormContainer
-) {
+    /* ================= SHOW FORM ================= */
 
-    cancelSubjectBtn.addEventListener(
-        "click",
-        function () {
+    if (showBtn && formBox) {
 
-            createSubjectFormContainer.classList.remove(
-                "show"
-            );
+        showBtn.addEventListener("click", function () {
 
-        }
-    );
+            formBox.classList.toggle("show");
 
-}
+        });
+
+    }
 
 
-/* ================= CREATE SUBJECT ================= */
+    /* ================= CANCEL ================= */
 
-const createSubjectForm =
-    document.getElementById(
-        "createSubjectForm"
-    );
+    if (cancelBtn && formBox) {
 
-const subjectFormMessage =
-    document.getElementById(
-        "subjectFormMessage"
-    );
+        cancelBtn.addEventListener("click", function () {
+
+            form.reset();
+
+            if (message) {
+                message.textContent = "";
+            }
+
+            formBox.classList.remove("show");
+
+        });
+
+    }
 
 
-if (createSubjectForm) {
+    /* ================= CREATE SUBJECT ================= */
 
-    createSubjectForm.addEventListener(
-        "submit",
-        async function (event) {
+    if (form) {
+
+        form.addEventListener("submit", async function (event) {
 
             event.preventDefault();
 
 
-          const subjectName =
-    document
-        .getElementById("subjectName")
-        .value
-        .trim();
+            const subjectName =
+                document
+                    .getElementById("subjectName")
+                    .value
+                    .trim();
 
-const subjectDepartment =
-    document
-        .getElementById("subjectDepartment")
-        .value
-        .trim();
+            const department =
+                document
+                    .getElementById("subjectDepartment")
+                    .value
+                    .trim();
 
-const subjectSemester =
-    document
-        .getElementById("subjectSemester")
-        .value;
+            const semester =
+                document
+                    .getElementById("subjectSemester")
+                    .value;
 
-const subjectCourseCode =
-    document
-        .getElementById("subjectCode")
-        .value
-        .trim();
+            const courseCode =
+                document
+                    .getElementById("subjectCourseCode")
+                    .value
+                    .trim();
+
 
             if (
                 !subjectName ||
-                !subjectDepartment ||
-                !subjectSemester
+                !department ||
+                !semester
             ) {
 
-                subjectFormMessage.textContent =
+                message.textContent =
                     "Please fill in all required fields.";
 
-                subjectFormMessage.style.color =
-                    "red";
+                message.style.color =
+                    "#dc2626";
 
                 return;
 
@@ -4426,43 +4431,55 @@ const subjectCourseCode =
             const formData =
                 new FormData();
 
-
             formData.append(
                 "subject_name",
                 subjectName
             );
 
-
             formData.append(
                 "department",
-                subjectDepartment
+                department
             );
-
 
             formData.append(
                 "semester",
-                subjectSemester
+                semester
             );
-
 
             formData.append(
                 "course_code",
-                subjectCourseCode
+                courseCode
             );
+
+
+            const submitBtn =
+                form.querySelector(
+                    'button[type="submit"]'
+                );
 
 
             try {
 
-                subjectFormMessage.textContent =
+                if (submitBtn) {
+
+                    submitBtn.disabled = true;
+
+                    submitBtn.textContent =
+                        "Creating...";
+
+                }
+
+
+                message.textContent =
                     "Creating subject...";
 
-                subjectFormMessage.style.color =
-                    "";
+                message.style.color =
+                    "#2563eb";
 
 
                 const response =
                     await fetch(
-                       `${API_BASE_URL}/subjects`,
+                        `${API_BASE_URL}/subjects`,
                         {
                             method: "POST",
                             body: formData
@@ -4479,27 +4496,37 @@ const subjectCourseCode =
                     data.status !== "success"
                 ) {
 
-                    subjectFormMessage.textContent =
+                    throw new Error(
                         data.message ||
-                        "Unable to create subject.";
-
-                    subjectFormMessage.style.color =
-                        "red";
-
-                    return;
+                        "Unable to create subject."
+                    );
 
                 }
 
 
-                subjectFormMessage.textContent =
-                    "Subject created successfully! ✅";
+                /* ================= SUCCESS ================= */
 
-                subjectFormMessage.style.color =
-                    "green";
+                message.textContent =
+                    "Subject created successfully!";
+
+                message.style.color =
+                    "#16a34a";
 
 
-                createSubjectForm.reset();
+                alert(
+                    "Subject created successfully! 🎉"
+                );
 
+
+                form.reset();
+
+
+                formBox.classList.remove(
+                    "show"
+                );
+
+
+                /* REFRESH SUBJECT LIST */
 
                 await loadSubjects();
 
@@ -4514,170 +4541,203 @@ const subjectCourseCode =
                 );
 
 
-                subjectFormMessage.textContent =
-                    "Unable to connect to the backend.";
+                message.textContent =
+                    error.message ||
+                    "Unable to create subject.";
 
-                subjectFormMessage.style.color =
-                    "red";
+                message.style.color =
+                    "#dc2626";
 
             }
 
-        }
-    );
+            finally {
 
-}
+                if (submitBtn) {
 
+                    submitBtn.disabled =
+                        false;
 
-/* ================= LOAD SUBJECTS ================= */
+                    submitBtn.textContent =
+                        "✅ Create Subject";
 
-async function loadSubjects() {
+                }
 
-    const subjectGrid =
-        document.getElementById(
-            "subjectGrid"
-        );
+            }
 
-
-    if (!subjectGrid) {
-        return;
-    }
-
-
-    subjectGrid.innerHTML = `
-        <div class="teacher-card">
-            <div class="teacher-card-avatar">📚</div>
-            <h3>Loading Subjects...</h3>
-            <p>Please wait</p>
-            <span>
-                Loading subjects from the database...
-            </span>
-        </div>
-    `;
-
-
-    try {
-
-        const response =
-            await fetch(
-                `${API_BASE_URL}/subjects`
-            );
-
-
-        const data =
-            await response.json();
-
-
-        if (
-            !response.ok ||
-            data.status !== "success"
-        ) {
-
-            subjectGrid.innerHTML = `
-                <div class="teacher-card">
-                    <div class="teacher-card-avatar">⚠️</div>
-                    <h3>Unable to Load Subjects</h3>
-                    <p>Please try again.</p>
-                    <span>
-                        ${data.message || "Unknown error"}
-                    </span>
-                </div>
-            `;
-
-            return;
-
-        }
-
-
-        const subjects =
-            data.subjects || [];
-
-
-        if (subjects.length === 0) {
-
-            subjectGrid.innerHTML = `
-                <div class="teacher-card">
-                    <div class="teacher-card-avatar">📚</div>
-                    <h3>No Subjects Created</h3>
-                    <p>Create your first subject.</p>
-                    <span>
-                        Subjects created here will appear for teachers.
-                    </span>
-                </div>
-            `;
-
-            return;
-
-        }
-
-
-        subjectGrid.innerHTML =
-            subjects
-                .map(
-                    function (subject) {
-
-                        return `
-                            <div class="teacher-card">
-
-                                <div class="teacher-card-avatar">
-                                    📚
-                                </div>
-
-                                <h3>
-                                    ${subject.subject_name}
-                                </h3>
-
-                                <p>
-                                    ${subject.department}
-                                    ·
-                                    Semester ${subject.semester}
-                                </p>
-
-                                <span>
-                                    ${
-                                        subject.course_code
-                                            ? "Course Code: " +
-                                              subject.course_code
-                                            : "No course code"
-                                    }
-                                </span>
-
-                            </div>
-                        `;
-
-                    }
-                )
-                .join("");
+        });
 
     }
 
-    catch (error) {
 
-        console.error(
-            "Load subjects error:",
-            error
-        );
+    /* ================= LOAD SUBJECTS ================= */
+
+    async function loadSubjects() {
+
+        if (!subjectGrid) {
+            return;
+        }
 
 
         subjectGrid.innerHTML = `
+
             <div class="teacher-card">
-                <div class="teacher-card-avatar">⚠️</div>
-                <h3>Unable to Connect</h3>
-                <p>Please try again.</p>
-                <span>
-                    Unable to connect to the backend.
-                </span>
+
+                <h3>
+                    Loading Subjects...
+                </h3>
+
+                <p>
+                    Please wait
+                </p>
+
             </div>
+
         `;
+
+
+        try {
+
+            const response =
+                await fetch(
+                    `${API_BASE_URL}/subjects`
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (
+                !response.ok ||
+                data.status !== "success"
+            ) {
+
+                throw new Error(
+                    data.message ||
+                    "Unable to load subjects."
+                );
+
+            }
+
+
+            const subjects =
+                data.subjects || [];
+
+
+            /* ================= NO SUBJECTS ================= */
+
+            if (subjects.length === 0) {
+
+                subjectGrid.innerHTML = `
+
+                    <div class="teacher-card">
+
+                        <div class="teacher-card-avatar">
+                            📘
+                        </div>
+
+                        <h3>
+                            No Subjects Created
+                        </h3>
+
+                        <p>
+                            Create your first subject.
+                        </p>
+
+                        <span>
+                            Subjects created here will appear for teachers.
+                        </span>
+
+                    </div>
+
+                `;
+
+                return;
+
+            }
+
+
+            /* ================= DISPLAY SUBJECTS ================= */
+
+            subjectGrid.innerHTML =
+                subjects.map(function (subject) {
+
+                    return `
+
+                        <div class="teacher-card">
+
+                            <div class="teacher-card-avatar">
+                                📘
+                            </div>
+
+                            <h3>
+                                ${escapeStudentHtml(
+                                    subject.subject_name
+                                )}
+                            </h3>
+
+                            <p>
+                                ${escapeStudentHtml(
+                                    subject.department
+                                )}
+                            </p>
+
+                            <span>
+                                Semester ${subject.semester}
+                                ${
+                                    subject.course_code
+                                        ? " • " +
+                                          escapeStudentHtml(
+                                              subject.course_code
+                                          )
+                                        : ""
+                                }
+                            </span>
+
+                        </div>
+
+                    `;
+
+                }).join("");
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Load subjects error:",
+                error
+            );
+
+
+            subjectGrid.innerHTML = `
+
+                <div class="teacher-card">
+
+                    <div class="teacher-card-avatar">
+                        ⚠️
+                    </div>
+
+                    <h3>
+                        Unable to Load Subjects
+                    </h3>
+
+                    <p>
+                        Please check the backend connection.
+                    </p>
+
+                </div>
+
+            `;
+
+        }
 
     }
 
-}
 
+    /* ================= INITIAL LOAD ================= */
 
-/* ================= INITIAL LOAD ================= */
+    loadSubjects();
 
-loadRegisteredHods();
-
-loadSubjects();
 
 });
